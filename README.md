@@ -7,7 +7,7 @@ Personal video club project to demonstrate Domain-Driven Design (DDD) and Event 
 This application consists of:
 - A frontend in Node.js (likely using React or similar) for managing and viewing the video club.
 - A backend API in Node.js with Express, structured following DDD and Event Sourcing principles.
-- MongoDB database for event and projection persistence.
+- MongoDB database for event and projection persistence (now used instead of Postgres).
 - Redis for caching or messaging.
 - Service orchestration with Docker Compose.
 
@@ -15,21 +15,23 @@ This application consists of:
 
 - **frontend**: User interface, exposed on port 3000.
 - **api**: RESTful API, exposed on port 3001, connects to MongoDB and Redis.
-- **db**: MongoDB, main data and event store.
+- **db**: MongoDB, main data and event store (with persistent volume).
 - **redis**: Cache/messaging service.
 
 ## How to Run the Project
 
 1. Make sure you have Docker and Docker Compose installed.
-2. Give execution permissions to the backend entrypoint:
+2. Give execution permissions to the backend entrypoint (only needed once):
    ```bash
    chmod +x ./api/entrypoint.sh
    ```
-3. Start the services:
+3. Start all services with:
    ```bash
    ./start.sh
    ```
 4. The frontend will be available at http://localhost:3000 and the API at http://localhost:3001
+5. You can access the API documentation (Swagger UI) at http://localhost:3001/api-docs
+6. A healthcheck endpoint is available at http://localhost:3001/health
 
 ## Applied Principles
 
@@ -40,6 +42,7 @@ This application consists of:
 
 - This project is experimental and serves as a demonstration of best practices in software architecture.
 - You can modify and adapt the code as needed.
+- The healthcheck endpoint and Swagger documentation are implemented directly in the main app for clarity and quick access during development.
 
 ---
 
