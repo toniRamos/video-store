@@ -26,7 +26,8 @@ This application consists of:
    chmod +x ./api/entrypoint.sh
    ```
 3. Start the services:
-   ```./start.sh
+   ```bash
+   ./start.sh
    ```
 4. The frontend will be available at http://localhost:3000 and the API at http://localhost:3001
 
