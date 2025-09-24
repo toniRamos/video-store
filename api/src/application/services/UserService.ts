@@ -1,7 +1,7 @@
 import { User } from '../../domain/entities/User';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import { UserAuditRepository } from '../../domain/repositories/UserAuditRepository';
-import { UserAuditLogEntity, FieldChange } from '../../domain/entities/UserAuditLog';
+import { UserAuditLog, UserAuditLogEntity, FieldChange } from '../../domain/entities/UserAuditLog';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface CreateUserRequest {
@@ -229,7 +229,27 @@ export class UserService {
     }
 
     const updatedUser = existingUser.updateStatus(active);
-    return await this.userRepository.update(updatedUser);
+    const savedUser = await this.userRepository.update(updatedUser);
+
+    // Log audit event for status change
+    if (this.auditRepository) {
+      const changes: FieldChange[] = [];
+      
+      if (existingUser.active !== active) {
+        changes.push({
+          field: 'active',
+          oldValue: existingUser.active,
+          newValue: active,
+          dataType: 'boolean'
+        });
+      }
+
+      if (changes.length > 0) {
+        await this.logAuditEvent(savedUser.id, 'UPDATE', changes);
+      }
+    }
+
+    return savedUser;
   }
 
   async updateUserMembership(id: string, membershipType: string): Promise<User> {
@@ -243,7 +263,27 @@ export class UserService {
     }
 
     const updatedUser = existingUser.updateMembership(membershipType);
-    return await this.userRepository.update(updatedUser);
+    const savedUser = await this.userRepository.update(updatedUser);
+
+    // Log audit event for membership change
+    if (this.auditRepository) {
+      const changes: FieldChange[] = [];
+      
+      if (existingUser.membershipType !== membershipType) {
+        changes.push({
+          field: 'membershipType',
+          oldValue: existingUser.membershipType,
+          newValue: membershipType,
+          dataType: 'string'
+        });
+      }
+
+      if (changes.length > 0) {
+        await this.logAuditEvent(savedUser.id, 'UPDATE', changes);
+      }
+    }
+
+    return savedUser;
   }
 
   async updateUserContactInfo(id: string, phone: string, address: string, city: string, postalCode: string): Promise<User> {
@@ -257,7 +297,54 @@ export class UserService {
     }
 
     const updatedUser = existingUser.updateContactInfo(phone, address, city, postalCode);
-    return await this.userRepository.update(updatedUser);
+    const savedUser = await this.userRepository.update(updatedUser);
+
+    // Log audit event for contact info changes
+    if (this.auditRepository) {
+      const changes: FieldChange[] = [];
+      
+      if (existingUser.phone !== phone) {
+        changes.push({
+          field: 'phone',
+          oldValue: existingUser.phone,
+          newValue: phone,
+          dataType: 'string'
+        });
+      }
+
+      if (existingUser.address !== address) {
+        changes.push({
+          field: 'address',
+          oldValue: existingUser.address,
+          newValue: address,
+          dataType: 'string'
+        });
+      }
+
+      if (existingUser.city !== city) {
+        changes.push({
+          field: 'city',
+          oldValue: existingUser.city,
+          newValue: city,
+          dataType: 'string'
+        });
+      }
+
+      if (existingUser.postalCode !== postalCode) {
+        changes.push({
+          field: 'postalCode',
+          oldValue: existingUser.postalCode,
+          newValue: postalCode,
+          dataType: 'string'
+        });
+      }
+
+      if (changes.length > 0) {
+        await this.logAuditEvent(savedUser.id, 'UPDATE', changes);
+      }
+    }
+
+    return savedUser;
   }
 
   async deleteUser(id: string): Promise<boolean> {
@@ -469,6 +556,47 @@ export class UserService {
     } catch (error) {
       console.error('❌ Error retrieving field history:', error);
       throw new Error('Failed to retrieve field history');
+    }
+  }
+
+  async getGlobalHistory(limit: number, offset: number): Promise<{ history: UserAuditLog[], totalCount: number }> {
+    if (!this.auditRepository) {
+      return { history: [], totalCount: 0 };
+    }
+
+    try {
+      return await this.auditRepository.getGlobalHistory(limit, offset);
+    } catch (error) {
+      console.error('❌ Error retrieving global history:', error);
+      throw new Error('Failed to retrieve global history');
+    }
+  }
+
+  async getGlobalHistorySummary(): Promise<{
+    totalEvents: number;
+    totalUsers: number;
+    actionCounts: { CREATE: number; UPDATE: number; DELETE: number };
+    userSummaries: Array<{
+      userId: string;
+      userName: string;
+      eventCount: number;
+      lastActivity: string;
+    }>;
+  }> {
+    if (!this.auditRepository) {
+      return {
+        totalEvents: 0,
+        totalUsers: 0,
+        actionCounts: { CREATE: 0, UPDATE: 0, DELETE: 0 },
+        userSummaries: []
+      };
+    }
+
+    try {
+      return await this.auditRepository.getGlobalHistorySummary();
+    } catch (error) {
+      console.error('❌ Error retrieving global history summary:', error);
+      throw new Error('Failed to retrieve global history summary');
     }
   }
 }

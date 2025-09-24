@@ -241,4 +241,112 @@ export class MongoUserAuditRepository implements UserAuditRepository {
       throw new Error('Failed to retrieve field history');
     }
   }
+
+  async getGlobalHistory(limit: number = 10, offset: number = 0): Promise<{ history: UserAuditLog[], totalCount: number }> {
+    try {
+      const [documents, totalCount] = await Promise.all([
+        this.getCollection()
+          .find({})
+          .sort({ timestamp: -1 })
+          .skip(offset)
+          .limit(limit)
+          .toArray(),
+        this.getCollection().countDocuments({})
+      ]);
+
+      const history = documents.map((doc: UserAuditLogDocument) => this.mapDocumentToEntity(doc));
+
+      return { history, totalCount };
+    } catch (error) {
+      console.error('❌ Error getting global history:', error);
+      throw new Error('Failed to retrieve global history');
+    }
+  }
+
+  async getGlobalHistorySummary(): Promise<{
+    totalEvents: number;
+    totalUsers: number;
+    actionCounts: { CREATE: number; UPDATE: number; DELETE: number };
+    userSummaries: Array<{
+      userId: string;
+      userName: string;
+      eventCount: number;
+      lastActivity: string;
+    }>;
+  }> {
+    try {
+      const collection = this.getCollection();
+      
+      // Get total events
+      const totalEvents = await collection.countDocuments({});
+      
+      // Get unique users
+      const uniqueUsers = await collection.distinct('userId');
+      const totalUsers = uniqueUsers.length;
+      
+      // Get action counts
+      const actionCounts = await collection.aggregate([
+        {
+          $group: {
+            _id: '$action',
+            count: { $sum: 1 }
+          }
+        }
+      ]).toArray();
+
+      const actionCountsMap = { CREATE: 0, UPDATE: 0, DELETE: 0 };
+      actionCounts.forEach(ac => {
+        if (ac._id in actionCountsMap) {
+          actionCountsMap[ac._id as keyof typeof actionCountsMap] = ac.count;
+        }
+      });
+
+      // Get user summaries
+      const userSummaries = await collection.aggregate([
+        {
+          $group: {
+            _id: '$userId',
+            eventCount: { $sum: 1 },
+            lastActivity: { $max: '$timestamp' }
+          }
+        },
+        {
+          $sort: { lastActivity: -1 }
+        }
+      ]).toArray();
+
+      // Try to get user names from metadata or use userId as fallback
+      const userSummariesWithNames = await Promise.all(
+        userSummaries.map(async (summary) => {
+          // Try to find a recent document with user metadata
+          const recentDoc = await collection.findOne(
+            { userId: summary._id },
+            { sort: { timestamp: -1 } }
+          );
+          
+          let userName = summary._id; // Fallback to userId
+          if (recentDoc && recentDoc.metadata && recentDoc.metadata.performedBy) {
+            userName = recentDoc.metadata.performedBy;
+          }
+
+          return {
+            userId: summary._id,
+            userName,
+            eventCount: summary.eventCount,
+            lastActivity: summary.lastActivity.toISOString()
+          };
+        })
+      );
+
+      return {
+        totalEvents,
+        totalUsers,
+        actionCounts: actionCountsMap,
+        userSummaries: userSummariesWithNames
+      };
+    } catch (error) {
+      console.error('❌ Error getting global history summary:', error);
+      throw new Error('Failed to retrieve global history summary');
+    }
+  }
 }

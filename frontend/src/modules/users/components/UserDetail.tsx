@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { User } from '../types/User';
 import { userService } from '../services/userService';
+import UserHistoryViewer from './UserHistoryViewer';
 import './UserDetail.css';
 
 const UserDetail: React.FC = () => {
@@ -11,6 +12,7 @@ const UserDetail: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -141,6 +143,13 @@ const UserDetail: React.FC = () => {
         </div>
         
         <div className="header-actions">
+          <button 
+            onClick={() => setShowHistory(!showHistory)}
+            className="btn btn-info history-btn"
+            title="Ver historial de cambios"
+          >
+            📋 {showHistory ? 'Ocultar Historial' : 'Ver Historial'}
+          </button>
           <Link to="/users" className="btn btn-secondary">
             ← Back to Users
           </Link>
@@ -149,6 +158,26 @@ const UserDetail: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {showHistory && (
+        <div className="history-modal-overlay">
+          <div className="history-modal">
+            <div className="history-modal-header">
+              <h2>📋 Historial de {user.fullName}</h2>
+              <button 
+                onClick={() => setShowHistory(false)}
+                className="close-history-btn"
+                title="Cerrar historial"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="history-modal-content">
+              <UserHistoryViewer userId={user.id} userName={user.fullName} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="user-detail-content">
         <div className="detail-grid">

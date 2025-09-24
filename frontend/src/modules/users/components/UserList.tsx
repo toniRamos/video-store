@@ -104,13 +104,6 @@ const UserList: React.FC = () => {
 
   return (
     <div className="user-list">
-      <div className="user-list-header">
-        <h2>👥 Users Management</h2>
-        <Link to="/users/create" className="btn btn-primary">
-          + Add New User
-        </Link>
-      </div>
-
       {error && (
         <div className="error-message">
           <p>❌ {error}</p>

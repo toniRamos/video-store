@@ -5,6 +5,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import filmRoutes from './application/routes/filmRoutes';
 import userRoutes from './application/routes/userRoutes';
 import hydrateRoutes from './application/routes/hydrateRoutes';
+import { historyRoutes } from './application/routes/historyRoutes';
 import { MongoConnection } from './infrastructure/database/MongoConnection';
 import { MongoFilmRepository } from './infrastructure/repositories/MongoFilmRepository';
 import { MongoUserRepository } from './infrastructure/repositories/MongoUserRepository';
@@ -53,6 +54,9 @@ app.use('/api/films', filmRoutes);
 
 // User routes
 app.use('/api/users', userRoutes);
+
+// History routes
+app.use('/api/history', historyRoutes);
 
 // Hydrate routes
 app.use('/api/hydrate', hydrateRoutes);

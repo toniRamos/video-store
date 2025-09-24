@@ -31,8 +31,8 @@ const EditUserPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px', fontSize: '18px', color: '#666' }}>
-        Loading user data...
+      <div style={{ textAlign: 'center', padding: '40px', fontSize: '18px', color: '#999' }}>
+        Loading user...
       </div>
     );
   }
@@ -42,21 +42,24 @@ const EditUserPage: React.FC = () => {
       <div style={{ 
         textAlign: 'center', 
         padding: '40px', 
-        backgroundColor: '#fee', 
-        border: '1px solid #fcc', 
-        borderRadius: '8px', 
-        margin: '20px' 
+        fontSize: '18px', 
+        color: '#ff4444',
+        backgroundColor: '#fff5f5',
+        border: '1px solid #ffdddd',
+        borderRadius: '8px',
+        margin: '20px'
       }}>
-        <p style={{ color: '#c33', fontSize: '18px' }}>❌ {error}</p>
+        <p>Error: {error}</p>
         <button 
           onClick={() => id && loadUser(id)}
           style={{
-            padding: '10px 20px',
+            padding: '8px 16px',
             backgroundColor: '#4CAF50',
             color: 'white',
             border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer'
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '16px'
           }}
         >
           Try Again

@@ -1,0 +1,22 @@
+.user-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.user-content {
+  margin-top: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-layout {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-layout {
+    padding: 12px;
+  }
+}

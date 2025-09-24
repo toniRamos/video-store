@@ -10,7 +10,8 @@ import {
   UsersHomePage,
   UserDetailPage,
   CreateUserPage,
-  EditUserPage 
+  EditUserPage,
+  UserHistoryPage
 } from './modules/users';
 import './styles/global.css';
 
@@ -38,6 +39,7 @@ const App: React.FC = () => {
               <Route path="/films/:id/edit" element={<EditFilmPage />} />
               <Route path="/users" element={<UsersHomePage />} />
               <Route path="/users/create" element={<CreateUserPage />} />
+              <Route path="/users/history" element={<UserHistoryPage />} />
               <Route path="/users/:id" element={<UserDetailPage />} />
               <Route path="/users/:id/edit" element={<EditUserPage />} />
             </Routes>

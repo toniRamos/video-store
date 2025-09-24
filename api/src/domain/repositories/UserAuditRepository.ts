@@ -10,4 +10,16 @@ export interface UserAuditRepository {
   getAuditCount(userId: string): Promise<number>;
   deleteByUserId(userId: string): Promise<void>;
   getFieldHistory(userId: string, fieldName: string): Promise<FieldChange[]>;
+  getGlobalHistory(limit?: number, offset?: number): Promise<{ history: UserAuditLog[], totalCount: number }>;
+  getGlobalHistorySummary(): Promise<{
+    totalEvents: number;
+    totalUsers: number;
+    actionCounts: { CREATE: number; UPDATE: number; DELETE: number };
+    userSummaries: Array<{
+      userId: string;
+      userName: string;
+      eventCount: number;
+      lastActivity: string;
+    }>;
+  }>;
 }

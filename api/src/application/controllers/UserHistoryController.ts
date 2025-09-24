@@ -368,4 +368,97 @@ export class UserHistoryController {
       });
     }
   }
+
+  /**
+   * @swagger
+   * /history:
+   *   get:
+   *     summary: Get global audit history
+   *     description: Retrieve audit history across all users in the system
+   *     tags: [History]
+   *     parameters:
+   *       - in: query
+   *         name: limit
+   *         required: false
+   *         description: Maximum number of records to return (default 10)
+   *         schema:
+   *           type: integer
+   *           minimum: 1
+   *           maximum: 100
+   *           default: 10
+   *       - in: query
+   *         name: offset
+   *         required: false
+   *         description: Number of records to skip (for pagination)
+   *         schema:
+   *           type: integer
+   *           minimum: 0
+   *           default: 0
+   */
+  async getGlobalHistory(req: Request, res: Response): Promise<void> {
+    try {
+      const { limit = '10', offset = '0' } = req.query as HistoryQueryParams;
+      
+      const limitNum = Math.max(1, Math.min(100, parseInt(limit)));
+      const offsetNum = Math.max(0, parseInt(offset));
+
+      console.log(`📚 Getting global history - Limit: ${limitNum}, Offset: ${offsetNum}`);
+
+      const { history, totalCount } = await this.userService.getGlobalHistory(limitNum, offsetNum);
+
+      console.log(`✅ Retrieved ${history.length} global audit entries (${totalCount} total)`);
+
+      res.json({
+        success: true,
+        data: {
+          history,
+          totalCount,
+          limit: limitNum,
+          offset: offsetNum,
+          hasMore: offsetNum + limitNum < totalCount
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error retrieving global history:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      res.status(500).json({
+        message: 'Error retrieving global history',
+        error: errorMessage
+      });
+    }
+  }
+
+  /**
+   * @swagger
+   * /history/summary:
+   *   get:
+   *     summary: Get global history summary
+   *     description: Get summary statistics for all audit events across all users
+   *     tags: [History]
+   */
+  async getGlobalHistorySummary(req: Request, res: Response): Promise<void> {
+    try {
+      console.log('📊 Getting global history summary...');
+
+      const summary = await this.userService.getGlobalHistorySummary();
+
+      console.log(`✅ Retrieved global summary - ${summary.totalEvents} total events across ${summary.totalUsers} users`);
+
+      res.json({
+        success: true,
+        data: summary
+      });
+    } catch (error) {
+      console.error('❌ Error retrieving global history summary:', error);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      res.status(500).json({
+        message: 'Error retrieving global history summary',
+        error: errorMessage
+      });
+    }
+  }
 }
