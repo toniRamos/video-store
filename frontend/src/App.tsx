@@ -1,14 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import FilmDetailPage from './pages/FilmDetailPage';
-import CreateFilmPage from './pages/CreateFilmPage';
-import EditFilmPage from './pages/EditFilmPage';
-import UsersHomePage from './pages/UsersHomePage';
-import UserDetailPage from './pages/UserDetailPage';
-import CreateUserPage from './pages/CreateUserPage';
-import EditUserPage from './pages/EditUserPage';
-import './App.css';
+import { 
+  HomePage,
+  FilmDetailPage,
+  CreateFilmPage,
+  EditFilmPage 
+} from './modules/films';
+import { 
+  UsersHomePage,
+  UserDetailPage,
+  CreateUserPage,
+  EditUserPage 
+} from './modules/users';
+import './styles/global.css';
 
 const App: React.FC = () => {
   return (
