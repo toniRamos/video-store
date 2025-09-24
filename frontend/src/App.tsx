@@ -1,9 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import FilmDetailPage from './pages/FilmDetailPage';
 import CreateFilmPage from './pages/CreateFilmPage';
 import EditFilmPage from './pages/EditFilmPage';
+import UsersHomePage from './pages/UsersHomePage';
+import UserDetailPage from './pages/UserDetailPage';
+import CreateUserPage from './pages/CreateUserPage';
+import EditUserPage from './pages/EditUserPage';
 import './App.css';
 
 const App: React.FC = () => {
@@ -13,7 +17,11 @@ const App: React.FC = () => {
         <header className="app-header">
           <div className="container">
             <h1 className="app-title">🎬 Video Store</h1>
-            <p className="app-subtitle">Manage your film collection</p>
+            <p className="app-subtitle">Manage your film collection and users</p>
+            <nav className="app-nav">
+              <Link to="/" className="nav-link">🎬 Films</Link>
+              <Link to="/users" className="nav-link">👥 Users</Link>
+            </nav>
           </div>
         </header>
         
@@ -24,6 +32,10 @@ const App: React.FC = () => {
               <Route path="/films/create" element={<CreateFilmPage />} />
               <Route path="/films/:id" element={<FilmDetailPage />} />
               <Route path="/films/:id/edit" element={<EditFilmPage />} />
+              <Route path="/users" element={<UsersHomePage />} />
+              <Route path="/users/create" element={<CreateUserPage />} />
+              <Route path="/users/:id" element={<UserDetailPage />} />
+              <Route path="/users/:id/edit" element={<EditUserPage />} />
             </Routes>
           </div>
         </main>
