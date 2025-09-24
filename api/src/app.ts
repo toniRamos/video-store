@@ -3,8 +3,10 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import filmRoutes from './application/routes/filmRoutes';
+import userRoutes from './application/routes/userRoutes';
 import { MongoConnection } from './infrastructure/database/MongoConnection';
 import { MongoFilmRepository } from './infrastructure/repositories/MongoFilmRepository';
+import { MongoUserRepository } from './infrastructure/repositories/MongoUserRepository';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +50,9 @@ app.get('/health', (req, res) => {
 // Film routes
 app.use('/api/films', filmRoutes);
 
+// User routes
+app.use('/api/users', userRoutes);
+
 // Initialize MongoDB connection and start server
 async function startServer() {
   try {
@@ -59,11 +64,15 @@ async function startServer() {
     const filmRepository = new MongoFilmRepository();
     await filmRepository.createIndexes();
     
+    const userRepository = new MongoUserRepository();
+    await userRepository.createIndexes();
+    
     app.listen(PORT, () => {
       console.log(`🎉 Look Video store!! and more boring stuff -> Server is running on port ${PORT}`);
       console.log(`📍 Access the API at: http://localhost:${PORT}`);
       console.log(`📚 API Documentation at: http://localhost:${PORT}/api-docs`);
       console.log(`🎬 Films API at: http://localhost:${PORT}/api/films`);
+      console.log(`👥 Users API at: http://localhost:${PORT}/api/users`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
