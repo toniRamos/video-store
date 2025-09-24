@@ -53,6 +53,7 @@ services:
     environment:
       MONGO_USERNAME: root
       MONGO_PASSWORD: password
+      SWAGGER_HOST_PORT: 3001
 
 volumes:
   db_data:

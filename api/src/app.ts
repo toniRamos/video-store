@@ -12,6 +12,7 @@ import { MongoUserRepository } from './infrastructure/repositories/MongoUserRepo
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SWAGGER_HOST_PORT = process.env.SWAGGER_HOST_PORT || PORT;
 
 app.use(cors());
 app.use(express.json());
@@ -27,7 +28,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:' + PORT,
+        url: 'http://localhost:' + SWAGGER_HOST_PORT,
       },
     ],
     components: {
@@ -77,10 +78,10 @@ async function startServer() {
     
     app.listen(PORT, () => {
       console.log(`🎉 Look Video store!! and more boring stuff -> Server is running on port ${PORT}`);
-      console.log(`📍 Access the API at: http://localhost:${PORT}`);
-      console.log(`📚 API Documentation at: http://localhost:${PORT}/api-docs`);
-      console.log(`🎬 Films API at: http://localhost:${PORT}/api/films`);
-      console.log(`👥 Users API at: http://localhost:${PORT}/api/users`);
+      console.log(`📍 Access the API at: http://localhost:${SWAGGER_HOST_PORT}`);
+      console.log(`📚 API Documentation at: http://localhost:${SWAGGER_HOST_PORT}/api-docs`);
+      console.log(`🎬 Films API at: http://localhost:${SWAGGER_HOST_PORT}/api/films`);
+      console.log(`👥 Users API at: http://localhost:${SWAGGER_HOST_PORT}/api/users`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
