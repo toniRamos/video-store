@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
+import { UserHistoryController } from '../controllers/UserHistoryController';
 import { UserService } from '../services/UserService';
 import { MongoUserRepository } from '../../infrastructure/repositories/MongoUserRepository';
+import { MongoUserAuditRepository } from '../../infrastructure/repositories/MongoUserAuditRepository';
 
 // Dependency injection setup
 const userRepository = new MongoUserRepository();
-const userService = new UserService(userRepository);
+const auditRepository = new MongoUserAuditRepository();
+const userService = new UserService(userRepository, auditRepository);
 const userController = new UserController(userService);
+const userHistoryController = new UserHistoryController(userService);
 
 const router = Router();
 
@@ -230,5 +234,22 @@ router.patch('/:id/status', userController.updateUserStatus);
 
 // Delete user
 router.delete('/:id', userController.deleteUser);
+
+// ============ AUDIT/HISTORY ROUTES ============
+/**
+ * @swagger
+ * tags:
+ *   name: User History
+ *   description: User audit and history management endpoints
+ */
+
+// Get user audit history
+router.get('/:id/history', userHistoryController.getUserHistory.bind(userHistoryController));
+
+// Get field-specific history
+router.get('/:id/history/field/:fieldName', userHistoryController.getFieldHistory.bind(userHistoryController));
+
+// Get history summary
+router.get('/:id/history/summary', userHistoryController.getHistorySummary.bind(userHistoryController));
 
 export default router;

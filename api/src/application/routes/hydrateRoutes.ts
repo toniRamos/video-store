@@ -4,16 +4,18 @@ import { FilmService } from '../services/FilmService';
 import { UserService } from '../services/UserService';
 import { MongoFilmRepository } from '../../infrastructure/repositories/MongoFilmRepository';
 import { MongoUserRepository } from '../../infrastructure/repositories/MongoUserRepository';
+import { MongoUserAuditRepository } from '../../infrastructure/repositories/MongoUserAuditRepository';
 
 const router = Router();
 
 // Initialize repositories
 const filmRepository = new MongoFilmRepository();
 const userRepository = new MongoUserRepository();
+const auditRepository = new MongoUserAuditRepository();
 
 // Initialize services
 const filmService = new FilmService(filmRepository);
-const userService = new UserService(userRepository);
+const userService = new UserService(userRepository, auditRepository);
 
 // Initialize controller
 const hydrateController = new HydrateController(filmService, userService);

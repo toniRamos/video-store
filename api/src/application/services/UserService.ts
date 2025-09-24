@@ -1,5 +1,7 @@
 import { User } from '../../domain/entities/User';
 import { UserRepository } from '../../domain/repositories/UserRepository';
+import { UserAuditRepository } from '../../domain/repositories/UserAuditRepository';
+import { UserAuditLogEntity, FieldChange } from '../../domain/entities/UserAuditLog';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface CreateUserRequest {
@@ -33,7 +35,10 @@ export interface UpdateUserRequest {
 }
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly auditRepository?: UserAuditRepository
+  ) {}
 
   async createUser(request: CreateUserRequest): Promise<User> {
     // Check if user already exists by personal identifier
@@ -66,7 +71,13 @@ export class UserService {
       request.active !== false
     );
 
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+
+    // Log audit event for user creation
+    const changes = this.calculateChanges(null, savedUser);
+    await this.logAuditEvent(savedUser.id, 'CREATE', changes);
+
+    return savedUser;
   }
 
   async getUserById(id: string): Promise<User | null> {
@@ -196,7 +207,15 @@ export class UserService {
       new Date() // updated timestamp
     );
 
-    return await this.userRepository.update(updatedUser);
+    const savedUser = await this.userRepository.update(updatedUser);
+
+    // Log audit event for user update
+    const changes = this.calculateChanges(existingUser, savedUser);
+    if (changes.length > 0) {
+      await this.logAuditEvent(savedUser.id, 'UPDATE', changes);
+    }
+
+    return savedUser;
   }
 
   async updateUserStatus(id: string, active: boolean): Promise<User> {
@@ -246,12 +265,20 @@ export class UserService {
       throw new Error('User ID is required');
     }
 
-    const exists = await this.userRepository.exists(id);
-    if (!exists) {
+    const existingUser = await this.userRepository.findById(id);
+    if (!existingUser) {
       throw new Error('User not found');
     }
 
-    return await this.userRepository.delete(id);
+    const deleted = await this.userRepository.delete(id);
+
+    if (deleted) {
+      // Log audit event for user deletion
+      const changes = this.calculateChanges(existingUser, null);
+      await this.logAuditEvent(id, 'DELETE', changes);
+    }
+
+    return deleted;
   }
 
   async userExists(id: string): Promise<boolean> {
@@ -276,5 +303,172 @@ export class UserService {
     }
     
     return await this.userRepository.existsByEmail(email);
+  }
+
+  // Audit methods
+
+  private async logAuditEvent(
+    userId: string,
+    action: 'CREATE' | 'UPDATE' | 'DELETE',
+    changes: FieldChange[],
+    metadata?: { userAgent?: string; ipAddress?: string; performedBy?: string }
+  ): Promise<void> {
+    if (!this.auditRepository) {
+      return; // Audit is optional
+    }
+
+    try {
+      const auditLog = UserAuditLogEntity.create(userId, action, changes, metadata);
+      await this.auditRepository.save(auditLog);
+    } catch (error) {
+      console.error('❌ Error logging audit event:', error);
+      // Don't throw - audit failure shouldn't break main operation
+    }
+  }
+
+  private calculateChanges(oldUser: User | null, newUser: User | null): FieldChange[] {
+    const changes: FieldChange[] = [];
+    
+    const userFields: (keyof User)[] = [
+      'personalIdentifier', 'firstName', 'lastName', 'email', 
+      'phone', 'address', 'city', 'postalCode', 'country', 
+      'dateOfBirth', 'membershipType', 'active'
+    ];
+
+    if (!oldUser && newUser) {
+      // Creation - log all fields as new
+      userFields.forEach(field => {
+        const value = newUser[field];
+        if (value !== undefined) {
+          changes.push({
+            field: field as string,
+            oldValue: null,
+            newValue: value,
+            dataType: this.getFieldDataType(field, value)
+          });
+        }
+      });
+
+      return changes;
+    }
+
+    if (oldUser && !newUser) {
+      // Deletion - log all fields as removed
+      userFields.forEach(field => {
+        const value = oldUser[field];
+        if (value !== undefined) {
+          changes.push({
+            field: field as string,
+            oldValue: value,
+            newValue: null,
+            dataType: this.getFieldDataType(field, value)
+          });
+        }
+      });
+
+      return changes;
+    }
+
+    if (oldUser && newUser) {
+      // Update - compare fields
+      userFields.forEach(field => {
+        const oldValue = oldUser[field];
+        const newValue = newUser[field];
+
+        if (this.hasFieldChanged(oldValue, newValue)) {
+          changes.push({
+            field: field as string,
+            oldValue: oldValue,
+            newValue: newValue,
+            dataType: this.getFieldDataType(field, newValue || oldValue)
+          });
+        }
+      });
+    }
+
+    return changes;
+  }
+
+  private hasFieldChanged(oldValue: any, newValue: any): boolean {
+    // Handle dates specially
+    if (oldValue instanceof Date && newValue instanceof Date) {
+      return oldValue.getTime() !== newValue.getTime();
+    }
+    
+    // Handle null/undefined
+    if (oldValue === null || oldValue === undefined) {
+      return newValue !== null && newValue !== undefined;
+    }
+    
+    if (newValue === null || newValue === undefined) {
+      return true;
+    }
+
+    // Regular comparison
+    return oldValue !== newValue;
+  }
+
+  private getFieldDataType(fieldName: keyof User, value: any): 'string' | 'number' | 'boolean' | 'date' | 'object' {
+    if (value instanceof Date) return 'date';
+    if (typeof value === 'boolean') return 'boolean';
+    if (typeof value === 'number') return 'number';
+    if (typeof value === 'object' && value !== null) return 'object';
+    return 'string';
+  }
+
+  // Public audit methods
+
+  async getUserAuditHistory(userId: string, limit: number = 50, offset: number = 0): Promise<any[]> {
+    if (!this.auditRepository) {
+      return [];
+    }
+
+    try {
+      const auditLogs = await this.auditRepository.findByUserId(userId, limit, offset);
+      
+      return auditLogs.map(log => ({
+        id: log.id,
+        action: log.action,
+        timestamp: log.timestamp,
+        changesSummary: (log as UserAuditLogEntity).getChangesSummary(),
+        changes: log.changes.map(change => ({
+          field: (log as UserAuditLogEntity).getFieldDisplayName(change.field),
+          fieldKey: change.field,
+          oldValue: (log as UserAuditLogEntity).formatValue(change.oldValue, change.dataType),
+          newValue: (log as UserAuditLogEntity).formatValue(change.newValue, change.dataType),
+          dataType: change.dataType
+        })),
+        metadata: log.metadata
+      }));
+    } catch (error) {
+      console.error('❌ Error retrieving audit history:', error);
+      throw new Error('Failed to retrieve audit history');
+    }
+  }
+
+  async getUserAuditCount(userId: string): Promise<number> {
+    if (!this.auditRepository) {
+      return 0;
+    }
+
+    try {
+      return await this.auditRepository.getAuditCount(userId);
+    } catch (error) {
+      console.error('❌ Error counting audit logs:', error);
+      return 0;
+    }
+  }
+
+  async getFieldHistory(userId: string, fieldName: string): Promise<FieldChange[]> {
+    if (!this.auditRepository) {
+      return [];
+    }
+
+    try {
+      return await this.auditRepository.getFieldHistory(userId, fieldName);
+    } catch (error) {
+      console.error('❌ Error retrieving field history:', error);
+      throw new Error('Failed to retrieve field history');
+    }
   }
 }
