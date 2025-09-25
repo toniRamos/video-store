@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { CreateFilmRequest, Film } from '../types/Film';
 import { filmService } from '../services/filmService';
+import DuplicateWarning from './DuplicateWarning';
+import LiveDuplicateWarning from './LiveDuplicateWarning';
+import Toast from '../../shared/components/Toast';
+import { useToast } from '../../shared/hooks/useToast';
+import { useDebounce } from '../../shared/hooks/useDebounce';
 import './FilmForm.css';
 
 interface FilmFormProps {
@@ -11,6 +16,7 @@ interface FilmFormProps {
 const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { toasts, removeToast, showSuccess, showError } = useToast();
   
   const [formData, setFormData] = useState<CreateFilmRequest>({
     title: '',
@@ -26,6 +32,11 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialLoading, setInitialLoading] = useState(isEdit);
+  const [duplicates, setDuplicates] = useState<Film[]>([]);
+  const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
+  const [checkingDuplicates, setCheckingDuplicates] = useState(false);
+  const [liveWarning, setLiveWarning] = useState<Film[]>([]);
+  const [showLiveWarning, setShowLiveWarning] = useState(false);
 
   useEffect(() => {
     if (isEdit && id) {
@@ -67,44 +78,155 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
     }));
   };
 
+  const checkForDuplicates = useCallback(async (title: string, director: string, releaseYear: number) => {
+    if (!title.trim() || !director.trim() || !releaseYear) {
+      return [];
+    }
+
+    try {
+      setCheckingDuplicates(true);
+      const duplicates = await filmService.checkPotentialDuplicates(title, director, releaseYear);
+      
+      // Filter out current film if editing
+      const filteredDuplicates = isEdit && id 
+        ? duplicates.filter(film => film.id !== id)
+        : duplicates;
+        
+      return filteredDuplicates;
+    } catch (error) {
+      console.error('Error checking duplicates:', error);
+      return [];
+    } finally {
+      setCheckingDuplicates(false);
+    }
+  }, [isEdit, id]);
+
+  // Live duplicate checking with debounce
+  const checkLiveDuplicates = useCallback(async (title: string, director: string, releaseYear: number) => {
+    if (!title.trim() || !director.trim() || !releaseYear || isEdit) {
+      setLiveWarning([]);
+      setShowLiveWarning(false);
+      return;
+    }
+
+    try {
+      const duplicates = await filmService.checkPotentialDuplicates(title, director, releaseYear);
+      setLiveWarning(duplicates);
+      setShowLiveWarning(duplicates.length > 0);
+    } catch (error) {
+      console.error('Error checking live duplicates:', error);
+      setLiveWarning([]);
+      setShowLiveWarning(false);
+    }
+  }, [isEdit]);
+
+  const debouncedLiveCheck = useDebounce(checkLiveDuplicates, 1000);
+
+  // Effect to trigger live duplicate checking when key fields change
+  useEffect(() => {
+    debouncedLiveCheck(formData.title, formData.director, formData.releaseYear);
+  }, [formData.title, formData.director, formData.releaseYear, debouncedLiveCheck]);
+
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      throw new Error('Title is required');
+    }
+    if (!formData.director.trim()) {
+      throw new Error('Director is required');
+    }
+    if (!formData.genre.trim()) {
+      throw new Error('Genre is required');
+    }
+    if (formData.duration <= 0) {
+      throw new Error('Duration must be greater than 0');
+    }
+    if (formData.price < 0) {
+      throw new Error('Price cannot be negative');
+    }
+    if (formData.releaseYear < 1895 || formData.releaseYear > new Date().getFullYear() + 5) {
+      throw new Error('Release year must be between 1895 and 5 years in the future');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // Validation
-      if (!formData.title.trim()) {
-        throw new Error('Title is required');
-      }
-      if (!formData.director.trim()) {
-        throw new Error('Director is required');
-      }
-      if (!formData.genre.trim()) {
-        throw new Error('Genre is required');
-      }
-      if (formData.duration <= 0) {
-        throw new Error('Duration must be greater than 0');
-      }
-      if (formData.price < 0) {
-        throw new Error('Price cannot be negative');
-      }
-      if (formData.releaseYear < 1895 || formData.releaseYear > new Date().getFullYear() + 5) {
-        throw new Error('Release year must be between 1895 and 5 years in the future');
-      }
+      validateForm();
 
       if (isEdit && id) {
+        // For editing, just update the film
         await filmService.updateFilm(id, formData);
-        navigate(`/films/${id}`);
+        showSuccess('Film updated successfully!');
+        setTimeout(() => navigate(`/films/${id}`), 1000);
       } else {
+        // For creating, check for duplicates first
+        const foundDuplicates = await checkForDuplicates(
+          formData.title,
+          formData.director,
+          formData.releaseYear
+        );
+
+        if (foundDuplicates.length > 0) {
+          setDuplicates(foundDuplicates);
+          setShowDuplicateWarning(true);
+          setLoading(false);
+          return;
+        }
+
+        // No duplicates found, create normally
         const newFilm = await filmService.createFilm(formData);
-        navigate(`/films/${newFilm.id}`);
+        showSuccess('Film created successfully!');
+        setTimeout(() => navigate(`/films/${newFilm.id}`), 1000);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save film');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save film';
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateAnyway = async () => {
+    setLoading(true);
+    try {
+      const newFilm = await filmService.createFilm(formData);
+      showSuccess('Film created successfully despite potential duplicates!');
+      setTimeout(() => navigate(`/films/${newFilm.id}`), 1000);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create film';
+      setError(errorMessage);
+      showError(errorMessage);
+      setLoading(false);
+    }
+    setShowDuplicateWarning(false);
+  };
+
+  const handleUpsert = async () => {
+    setLoading(true);
+    try {
+      const result = await filmService.upsertFilm(formData);
+      const message = result.wasCreated 
+        ? 'New film created successfully!' 
+        : 'Existing film updated successfully!';
+      showSuccess(message);
+      setTimeout(() => navigate(`/films/${result.film.id}`), 1000);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update film';
+      setError(errorMessage);
+      showError(errorMessage);
+      setLoading(false);
+    }
+    setShowDuplicateWarning(false);
+  };
+
+  const handleCancelWarning = () => {
+    setShowDuplicateWarning(false);
+    setDuplicates([]);
+    setLoading(false);
   };
 
   if (initialLoading) {
@@ -237,6 +359,11 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
           </div>
         </div>
 
+        <LiveDuplicateWarning 
+          duplicates={liveWarning}
+          visible={showLiveWarning && !isEdit}
+        />
+
         <div className="form-group full-width">
           <label htmlFor="description">Description *</label>
           <textarea
@@ -273,13 +400,37 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
           </Link>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || checkingDuplicates}
             className="btn btn-primary"
           >
-            {loading ? 'Saving...' : (isEdit ? 'Update Film' : 'Create Film')}
+            {checkingDuplicates 
+              ? 'Checking duplicates...' 
+              : loading 
+                ? 'Saving...' 
+                : (isEdit ? 'Update Film' : 'Create Film')
+            }
           </button>
         </div>
       </form>
+
+      {showDuplicateWarning && (
+        <DuplicateWarning
+          duplicates={duplicates}
+          onContinue={handleCreateAnyway}
+          onCancel={handleCancelWarning}
+          onUseUpsert={handleUpsert}
+          loading={loading}
+        />
+      )}
+
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
     </div>
   );
 };

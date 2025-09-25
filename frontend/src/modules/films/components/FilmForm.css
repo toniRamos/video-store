@@ -158,6 +158,36 @@
   }
 }
 
+/* Duplicate checking states */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn.checking {
+  position: relative;
+}
+
+.btn.checking::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
 @media (max-width: 480px) {
   .film-form-content {
     padding: 1rem;

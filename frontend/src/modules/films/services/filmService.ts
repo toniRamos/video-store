@@ -98,6 +98,46 @@ class FilmService {
     const response = await this.request<Film[]>('/api/films?available=true');
     return response.data || [];
   }
+
+  async checkPotentialDuplicates(title: string, director: string, releaseYear: number): Promise<Film[]> {
+    const params = new URLSearchParams({
+      title: title.trim(),
+      director: director.trim(),
+      releaseYear: releaseYear.toString()
+    });
+    
+    const response = await this.request<Film[]>(`/api/films/check-duplicates?${params}`);
+    return response.data || [];
+  }
+
+  async upsertFilm(filmData: CreateFilmRequest): Promise<{ film: Film; wasCreated: boolean }> {
+    const url = `${this.baseUrl}/api/films/upsert`;
+    
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filmData),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+
+      // The API returns { success: true, data: Film, wasCreated: boolean }
+      return { 
+        film: data.data, 
+        wasCreated: data.wasCreated 
+      };
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Network error');
+    }
+  }
 }
 
 export const filmService = new FilmService();
