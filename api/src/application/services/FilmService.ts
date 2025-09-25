@@ -45,6 +45,32 @@ export class FilmService {
     return await this.filmRepository.save(film);
   }
 
+  async upsertFilm(request: CreateFilmRequest): Promise<{ film: Film; wasCreated: boolean }> {
+    const id = uuidv4();
+    
+    const film = Film.create(
+      id,
+      request.title,
+      request.director,
+      request.releaseYear,
+      request.genre,
+      request.duration,
+      request.description,
+      request.price,
+      request.available
+    );
+
+    return await this.filmRepository.upsert(film);
+  }
+
+  async findPotentialDuplicates(title: string, director: string, releaseYear: number): Promise<Film[]> {
+    if (!title || !director || !releaseYear) {
+      throw new Error('Title, director and release year are required');
+    }
+    
+    return await this.filmRepository.findPotentialDuplicates(title, director, releaseYear);
+  }
+
   async getFilmById(id: string): Promise<Film | null> {
     if (!id) {
       throw new Error('Film ID is required');

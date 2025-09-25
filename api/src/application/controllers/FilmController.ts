@@ -387,4 +387,172 @@ export class FilmController {
       });
     }
   }
+
+  /**
+   * @swagger
+   * /api/films/upsert:
+   *   post:
+   *     summary: Create or update film (prevents duplicates)
+   *     description: Creates a new film or updates existing one if a film with same title, director and year already exists
+   *     tags: [Films]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - title
+   *               - director
+   *               - releaseYear
+   *               - genre
+   *               - duration
+   *               - description
+   *               - price
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 example: "The Matrix"
+   *               director:
+   *                 type: string
+   *                 example: "Lana Wachowski"
+   *               releaseYear:
+   *                 type: number
+   *                 example: 1999
+   *               genre:
+   *                 type: string
+   *                 example: "Sci-Fi"
+   *               duration:
+   *                 type: number
+   *                 example: 136
+   *               description:
+   *                 type: string
+   *                 example: "A computer programmer discovers reality is a simulation"
+   *               price:
+   *                 type: number
+   *                 minimum: 0
+   *                 example: 12.99
+   *               available:
+   *                 type: boolean
+   *                 default: true
+   *     responses:
+   *       200:
+   *         description: Film created or updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   $ref: '#/components/schemas/Film'
+   *                 wasCreated:
+   *                   type: boolean
+   *                   description: True if film was created, false if updated
+   *                 message:
+   *                   type: string
+   *       400:
+   *         description: Validation error
+   *       500:
+   *         description: Internal server error
+   */
+  async upsertFilm(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.filmService.upsertFilm(req.body);
+      
+      res.status(200).json({
+        success: true,
+        data: result.film.toJSON(),
+        wasCreated: result.wasCreated,
+        message: result.wasCreated ? 'Film created successfully' : 'Film updated successfully'
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/films/check-duplicates:
+   *   get:
+   *     summary: Check for potential duplicate films
+   *     description: Find films that might be duplicates based on normalized title, director and release year
+   *     tags: [Films]
+   *     parameters:
+   *       - in: query
+   *         name: title
+   *         required: true
+   *         schema:
+   *           type: string
+   *         example: "the matrix"
+   *       - in: query
+   *         name: director
+   *         required: true
+   *         schema:
+   *           type: string
+   *         example: "lana wachowski"
+   *       - in: query
+   *         name: releaseYear
+   *         required: true
+   *         schema:
+   *           type: number
+   *         example: 1999
+   *     responses:
+   *       200:
+   *         description: List of potential duplicate films
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Film'
+   *                 message:
+   *                   type: string
+   *       400:
+   *         description: Missing required parameters
+   *       500:
+   *         description: Internal server error
+   */
+  async checkDuplicates(req: Request, res: Response): Promise<void> {
+    try {
+      const { title, director, releaseYear } = req.query;
+      
+      if (!title || !director || !releaseYear) {
+        res.status(400).json({
+          success: false,
+          message: 'Title, director and releaseYear are required parameters'
+        });
+        return;
+      }
+      
+      const duplicates = await this.filmService.findPotentialDuplicates(
+        title as string, 
+        director as string, 
+        parseInt(releaseYear as string)
+      );
+      
+      res.status(200).json({
+        success: true,
+        data: duplicates.map(film => film.toJSON()),
+        message: duplicates.length > 0 
+          ? `Found ${duplicates.length} potential duplicate(s)` 
+          : 'No potential duplicates found'
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+  }
 }

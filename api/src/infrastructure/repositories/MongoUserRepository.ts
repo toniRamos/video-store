@@ -288,7 +288,6 @@ export class MongoUserRepository implements UserRepository {
     }
   }
 
-  // Método adicional para crear índices (útil para optimización)
   async createIndexes(): Promise<void> {
     try {
       const collection = this.getCollection();

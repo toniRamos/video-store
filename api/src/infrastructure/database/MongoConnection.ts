@@ -22,7 +22,7 @@ export class MongoConnection {
       const mongoPort = process.env.MONGODB_PORT || '27017';
       const dbName = process.env.MONGODB_DB_NAME || 'videostore';
 
-      // Construir la URL de conexión con o sin autenticación
+      // Build connection URL with or without authentication
       let mongoUrl: string;
       if (mongoUsername && mongoPassword) {
         mongoUrl = `mongodb://${mongoUsername}:${mongoPassword}@${mongoHost}:${mongoPort}`;

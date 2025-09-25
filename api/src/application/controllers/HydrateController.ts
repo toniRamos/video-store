@@ -46,15 +46,22 @@ export class HydrateController {
       // Clear existing data (optional - remove if you want to keep existing data)
       console.log('🗑️  Clearing existing data...');
       
-      // Create films
-      console.log('🎬 Creating sample films...');
+      // Create or update films
+      console.log('🎬 Creating/updating sample films...');
       let filmsCreated = 0;
+      let filmsUpdated = 0;
       for (const filmData of sampleFilms) {
         try {
-          await this.filmService.createFilm(filmData);
-          filmsCreated++;
+          const result = await this.filmService.upsertFilm(filmData);
+          if (result.wasCreated) {
+            filmsCreated++;
+            console.log(`✅ Created new film: "${filmData.title}"`);
+          } else {
+            filmsUpdated++;
+            console.log(`🔄 Updated existing film: "${filmData.title}"`);
+          }
         } catch (error) {
-          console.log(`⚠️  Film "${filmData.title}" might already exist, skipping...`);
+          console.log(`❌ Error processing film "${filmData.title}":`, error);
         }
       }
 
@@ -76,6 +83,7 @@ export class HydrateController {
         message: 'Database hydrated successfully',
         data: {
           filmsCreated,
+          filmsUpdated,
           usersCreated,
           totalSampleFilms: sampleFilms.length,
           totalSampleUsers: sampleUsers.length

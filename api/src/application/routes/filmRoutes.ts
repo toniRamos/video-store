@@ -138,6 +138,12 @@ const router = Router();
 // Create a new film
 router.post('/', (req, res) => filmController.createFilm(req, res));
 
+// Create or update film (prevents duplicates) - IMPORTANT: Must be before '/:id' routes
+router.post('/upsert', (req, res) => filmController.upsertFilm(req, res));
+
+// Check for potential duplicates - IMPORTANT: Must be before '/:id' routes
+router.get('/check-duplicates', (req, res) => filmController.checkDuplicates(req, res));
+
 // Get all films (with optional filters)
 router.get('/', (req, res) => filmController.getAllFilms(req, res));
 
