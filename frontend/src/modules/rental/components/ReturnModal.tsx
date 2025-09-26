@@ -57,11 +57,15 @@ export const ReturnModal: React.FC<Props> = ({ rental, onClose, onSuccess }) => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate return date
+    // Validate return date - allow same day returns
     const rentalStart = new Date(rental.rentalDate);
     const returnDateTime = new Date(returnDate);
+    
+    // Only validate that return date is not before rental date (same day is OK)
+    const rentalDate = new Date(rentalStart.getFullYear(), rentalStart.getMonth(), rentalStart.getDate());
+    const returnOnlyDate = new Date(returnDateTime.getFullYear(), returnDateTime.getMonth(), returnDateTime.getDate());
 
-    if (returnDateTime < rentalStart) {
+    if (returnOnlyDate < rentalDate) {
       setError('Return date cannot be before rental date');
       return;
     }
