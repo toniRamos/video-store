@@ -6,9 +6,11 @@ import filmRoutes from './application/routes/filmRoutes';
 import userRoutes from './application/routes/userRoutes';
 import hydrateRoutes from './application/routes/hydrateRoutes';
 import { historyRoutes } from './application/routes/historyRoutes';
+import { rentalRoutes } from './application/routes/rentalRoutes';
 import { MongoConnection } from './infrastructure/database/MongoConnection';
 import { MongoFilmRepository } from './infrastructure/repositories/MongoFilmRepository';
 import { MongoUserRepository } from './infrastructure/repositories/MongoUserRepository';
+import { MongoRentalRepository } from './infrastructure/repositories/MongoRentalRepository';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,6 +58,9 @@ app.use('/api/films', filmRoutes);
 // User routes
 app.use('/api/users', userRoutes);
 
+// Rental routes
+app.use('/api/rentals', rentalRoutes);
+
 // History routes
 app.use('/api/history', historyRoutes);
 
@@ -76,12 +81,16 @@ async function startServer() {
     const userRepository = new MongoUserRepository();
     await userRepository.createIndexes();
     
+    const rentalRepository = new MongoRentalRepository();
+    // Indexes are created automatically on first access
+    
     app.listen(PORT, () => {
       console.log(`🎉 Look Video store!! and more boring stuff -> Server is running on port ${PORT}`);
       console.log(`📍 Access the API at: http://localhost:${SWAGGER_HOST_PORT}`);
       console.log(`📚 API Documentation at: http://localhost:${SWAGGER_HOST_PORT}/api-docs`);
       console.log(`🎬 Films API at: http://localhost:${SWAGGER_HOST_PORT}/api/films`);
       console.log(`👥 Users API at: http://localhost:${SWAGGER_HOST_PORT}/api/users`);
+      console.log(`🎭 Rentals API at: http://localhost:${SWAGGER_HOST_PORT}/api/rentals`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

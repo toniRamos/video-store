@@ -181,6 +181,54 @@ export class Film {
     return this.quantity - this.availabilityQuantity;
   }
 
+  public decreaseAvailableQuantity(count: number = 1): Film {
+    const newAvailability = this.availabilityQuantity - count;
+    
+    if (newAvailability < 0) {
+      throw new Error('Cannot decrease availability below 0');
+    }
+    
+    return new Film(
+      this.id,
+      this.title,
+      this.director,
+      this.releaseYear,
+      this.genre,
+      this.duration,
+      this.description,
+      this.available,
+      this.price,
+      this.quantity,
+      newAvailability,
+      this.createdAt,
+      new Date()
+    );
+  }
+
+  public increaseAvailableQuantity(count: number = 1): Film {
+    const newAvailability = this.availabilityQuantity + count;
+    
+    if (newAvailability > this.quantity) {
+      throw new Error('Cannot increase availability beyond total quantity');
+    }
+    
+    return new Film(
+      this.id,
+      this.title,
+      this.director,
+      this.releaseYear,
+      this.genre,
+      this.duration,
+      this.description,
+      this.available,
+      this.price,
+      this.quantity,
+      newAvailability,
+      this.createdAt,
+      new Date()
+    );
+  }
+
   public toJSON() {
     return {
       id: this.id,
