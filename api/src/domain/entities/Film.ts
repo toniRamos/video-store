@@ -9,6 +9,8 @@ export class Film {
     public readonly description: string,
     public readonly available: boolean = true,
     public readonly price: number,
+    public readonly quantity: number = 1, // Total copies available in inventory
+    public readonly availabilityQuantity: number = 1, // Copies available for rental
     public readonly createdAt: Date = new Date(),
     public readonly updatedAt: Date = new Date()
   ) {
@@ -39,6 +41,18 @@ export class Film {
     if (this.price < 0) {
       throw new Error('Price cannot be negative');
     }
+
+    if (this.quantity < 0) {
+      throw new Error('Quantity cannot be negative');
+    }
+
+    if (this.availabilityQuantity < 0) {
+      throw new Error('Availability quantity cannot be negative');
+    }
+
+    if (this.availabilityQuantity > this.quantity) {
+      throw new Error('Availability quantity cannot exceed total quantity');
+    }
   }
 
   public static create(
@@ -50,7 +64,9 @@ export class Film {
     duration: number,
     description: string,
     price: number,
-    available: boolean = true
+    available: boolean = true,
+    quantity: number = 1,
+    availabilityQuantity?: number
   ): Film {
     return new Film(
       id,
@@ -61,7 +77,9 @@ export class Film {
       duration,
       description,
       available,
-      price
+      price,
+      quantity,
+      availabilityQuantity ?? quantity, // If not provided, assume all copies are available
     );
   }
 
@@ -76,6 +94,8 @@ export class Film {
       this.description,
       available,
       this.price,
+      this.quantity,
+      this.availabilityQuantity,
       this.createdAt,
       new Date()
     );
@@ -96,9 +116,69 @@ export class Film {
       this.description,
       this.available,
       price,
+      this.quantity,
+      this.availabilityQuantity,
       this.createdAt,
       new Date()
     );
+  }
+
+  public updateQuantity(quantity: number, availabilityQuantity?: number): Film {
+    if (quantity < 0) {
+      throw new Error('Quantity cannot be negative');
+    }
+
+    const newAvailabilityQuantity = availabilityQuantity ?? Math.min(this.availabilityQuantity, quantity);
+
+    return new Film(
+      this.id,
+      this.title,
+      this.director,
+      this.releaseYear,
+      this.genre,
+      this.duration,
+      this.description,
+      this.available,
+      this.price,
+      quantity,
+      newAvailabilityQuantity,
+      this.createdAt,
+      new Date()
+    );
+  }
+
+  public updateAvailabilityQuantity(availabilityQuantity: number): Film {
+    if (availabilityQuantity < 0) {
+      throw new Error('Availability quantity cannot be negative');
+    }
+
+    if (availabilityQuantity > this.quantity) {
+      throw new Error('Availability quantity cannot exceed total quantity');
+    }
+
+    return new Film(
+      this.id,
+      this.title,
+      this.director,
+      this.releaseYear,
+      this.genre,
+      this.duration,
+      this.description,
+      this.available,
+      this.price,
+      this.quantity,
+      availabilityQuantity,
+      this.createdAt,
+      new Date()
+    );
+  }
+
+  public isAvailableForRental(): boolean {
+    return this.available && this.availabilityQuantity > 0;
+  }
+
+  public getRentedQuantity(): number {
+    return this.quantity - this.availabilityQuantity;
   }
 
   public toJSON() {
@@ -112,6 +192,10 @@ export class Film {
       description: this.description,
       available: this.available,
       price: this.price,
+      quantity: this.quantity,
+      availabilityQuantity: this.availabilityQuantity,
+      isAvailableForRental: this.isAvailableForRental(),
+      rentedQuantity: this.getRentedQuantity(),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };

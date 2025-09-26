@@ -42,6 +42,13 @@ export class FilmController {
    *               available:
    *                 type: boolean
    *                 default: true
+   *               quantity:
+   *                 type: number
+   *                 default: 1
+   *                 description: Total number of copies in inventory
+   *               availabilityQuantity:
+   *                 type: number
+   *                 description: Number of copies available for rental (defaults to quantity if not specified)
    *     responses:
    *       201:
    *         description: Film created successfully
@@ -547,6 +554,205 @@ export class FilmController {
         message: duplicates.length > 0 
           ? `Found ${duplicates.length} potential duplicate(s)` 
           : 'No potential duplicates found'
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/films/{id}/quantity:
+   *   patch:
+   *     summary: Update film quantity
+   *     tags: [Films]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - quantity
+   *             properties:
+   *               quantity:
+   *                 type: number
+   *                 minimum: 0
+   *               availabilityQuantity:
+   *                 type: number
+   *                 minimum: 0
+   *     responses:
+   *       200:
+   *         description: Film quantity updated successfully
+   *       400:
+   *         description: Invalid input data
+   *       404:
+   *         description: Film not found
+   *       500:
+   *         description: Internal server error
+   */
+  async updateFilmQuantity(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { quantity, availabilityQuantity } = req.body;
+      
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          message: 'Film ID is required'
+        });
+        return;
+      }
+
+      if (quantity === undefined || quantity < 0) {
+        res.status(400).json({
+          success: false,
+          message: 'Valid quantity is required'
+        });
+        return;
+      }
+
+      const updatedFilm = await this.filmService.updateFilmQuantity(id, quantity, availabilityQuantity);
+      
+      res.status(200).json({
+        success: true,
+        data: updatedFilm.toJSON(),
+        message: 'Film quantity updated successfully'
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Film not found') {
+        res.status(404).json({
+          success: false,
+          message: 'Film not found'
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+      }
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/films/{id}/availability-quantity:
+   *   patch:
+   *     summary: Update film availability quantity
+   *     tags: [Films]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - availabilityQuantity
+   *             properties:
+   *               availabilityQuantity:
+   *                 type: number
+   *                 minimum: 0
+   *     responses:
+   *       200:
+   *         description: Film availability quantity updated successfully
+   *       400:
+   *         description: Invalid input data
+   *       404:
+   *         description: Film not found
+   *       500:
+   *         description: Internal server error
+   */
+  async updateFilmAvailabilityQuantity(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { availabilityQuantity } = req.body;
+      
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          message: 'Film ID is required'
+        });
+        return;
+      }
+
+      if (availabilityQuantity === undefined || availabilityQuantity < 0) {
+        res.status(400).json({
+          success: false,
+          message: 'Valid availability quantity is required'
+        });
+        return;
+      }
+
+      const updatedFilm = await this.filmService.updateFilmAvailabilityQuantity(id, availabilityQuantity);
+      
+      res.status(200).json({
+        success: true,
+        data: updatedFilm.toJSON(),
+        message: 'Film availability quantity updated successfully'
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Film not found') {
+        res.status(404).json({
+          success: false,
+          message: 'Film not found'
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+      }
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/films/available-for-rental:
+   *   get:
+   *     summary: Get all films available for rental
+   *     tags: [Films]
+   *     responses:
+   *       200:
+   *         description: List of films available for rental
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Film'
+   *                 count:
+   *                   type: number
+   *       500:
+   *         description: Internal server error
+   */
+  async getFilmsAvailableForRental(req: Request, res: Response): Promise<void> {
+    try {
+      const films = await this.filmService.getFilmsAvailableForRental();
+      
+      res.status(200).json({
+        success: true,
+        data: films.map(film => film.toJSON()),
+        count: films.length
       });
     } catch (error) {
       res.status(500).json({

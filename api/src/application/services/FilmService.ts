@@ -11,6 +11,8 @@ export interface CreateFilmRequest {
   description: string;
   price: number;
   available?: boolean;
+  quantity?: number;
+  availabilityQuantity?: number;
 }
 
 export interface UpdateFilmRequest {
@@ -22,6 +24,8 @@ export interface UpdateFilmRequest {
   description?: string;
   price?: number;
   available?: boolean;
+  quantity?: number;
+  availabilityQuantity?: number;
 }
 
 export class FilmService {
@@ -39,7 +43,9 @@ export class FilmService {
       request.duration,
       request.description,
       request.price,
-      request.available
+      request.available,
+      request.quantity,
+      request.availabilityQuantity
     );
 
     return await this.filmRepository.save(film);
@@ -57,7 +63,9 @@ export class FilmService {
       request.duration,
       request.description,
       request.price,
-      request.available
+      request.available,
+      request.quantity,
+      request.availabilityQuantity
     );
 
     return await this.filmRepository.upsert(film);
@@ -132,6 +140,8 @@ export class FilmService {
       request.description ?? existingFilm.description,
       request.available ?? existingFilm.available,
       request.price ?? existingFilm.price,
+      request.quantity ?? existingFilm.quantity,
+      request.availabilityQuantity ?? existingFilm.availabilityQuantity,
       existingFilm.createdAt,
       new Date()
     );
@@ -170,5 +180,50 @@ export class FilmService {
 
     const updatedFilm = film.updatePrice(newPrice);
     return await this.filmRepository.update(updatedFilm);
+  }
+
+  /**
+   * Update the total quantity of copies for a film
+   */
+  async updateFilmQuantity(id: string, quantity: number, availabilityQuantity?: number): Promise<Film> {
+    const film = await this.getFilmById(id);
+    if (!film) {
+      throw new Error('Film not found');
+    }
+
+    const updatedFilm = film.updateQuantity(quantity, availabilityQuantity);
+    return await this.filmRepository.update(updatedFilm);
+  }
+
+  /**
+   * Update the availability quantity (copies available for rental)
+   */
+  async updateFilmAvailabilityQuantity(id: string, availabilityQuantity: number): Promise<Film> {
+    const film = await this.getFilmById(id);
+    if (!film) {
+      throw new Error('Film not found');
+    }
+
+    const updatedFilm = film.updateAvailabilityQuantity(availabilityQuantity);
+    return await this.filmRepository.update(updatedFilm);
+  }
+
+  /**
+   * Get all films that are available for rental (have copies available)
+   */
+  async getFilmsAvailableForRental(): Promise<Film[]> {
+    const allFilms = await this.getAllFilms();
+    return allFilms.filter(film => film.isAvailableForRental());
+  }
+
+  /**
+   * Check if a film has copies available for rental
+   */
+  async isFilmAvailableForRental(id: string): Promise<boolean> {
+    const film = await this.getFilmById(id);
+    if (!film) {
+      return false;
+    }
+    return film.isAvailableForRental();
   }
 }

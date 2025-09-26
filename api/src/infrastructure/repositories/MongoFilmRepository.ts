@@ -14,6 +14,8 @@ interface FilmDocument {
   description: string;
   available: boolean;
   price: number;
+  quantity: number;
+  availabilityQuantity: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +44,8 @@ export class MongoFilmRepository implements FilmRepository {
       description: film.description,
       available: film.available,
       price: film.price,
+      quantity: film.quantity,
+      availabilityQuantity: film.availabilityQuantity,
       createdAt: film.createdAt,
       updatedAt: film.updatedAt
     };
@@ -58,6 +62,8 @@ export class MongoFilmRepository implements FilmRepository {
       document.description,
       document.available,
       document.price,
+      document.quantity || 1, // Default to 1 for backward compatibility
+      document.availabilityQuantity ?? document.quantity ?? 1, // Default to quantity or 1
       document.createdAt,
       document.updatedAt
     );

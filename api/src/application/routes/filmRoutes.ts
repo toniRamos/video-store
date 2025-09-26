@@ -54,6 +54,19 @@ const router = Router();
  *         price:
  *           type: number
  *           description: The rental price of the film
+ *         quantity:
+ *           type: number
+ *           description: Total number of copies in inventory
+ *           default: 1
+ *         availabilityQuantity:
+ *           type: number
+ *           description: Number of copies available for rental
+ *         isAvailableForRental:
+ *           type: boolean
+ *           description: Whether the film has copies available for rental
+ *         rentedQuantity:
+ *           type: number
+ *           description: Number of copies currently rented
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -144,6 +157,9 @@ router.post('/upsert', (req, res) => filmController.upsertFilm(req, res));
 // Check for potential duplicates - IMPORTANT: Must be before '/:id' routes
 router.get('/check-duplicates', (req, res) => filmController.checkDuplicates(req, res));
 
+// Get films available for rental - IMPORTANT: Must be before '/:id' routes
+router.get('/available-for-rental', (req, res) => filmController.getFilmsAvailableForRental(req, res));
+
 // Get all films (with optional filters)
 router.get('/', (req, res) => filmController.getAllFilms(req, res));
 
@@ -161,5 +177,11 @@ router.patch('/:id/toggle-availability', (req, res) => filmController.toggleAvai
 
 // Update film price
 router.patch('/:id/price', (req, res) => filmController.updatePrice(req, res));
+
+// Update film inventory quantity
+router.patch('/:id/quantity', (req, res) => filmController.updateFilmQuantity(req, res));
+
+// Update film availability quantity
+router.patch('/:id/availability-quantity', (req, res) => filmController.updateFilmAvailabilityQuantity(req, res));
 
 export default router;
