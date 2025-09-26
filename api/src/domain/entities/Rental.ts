@@ -71,11 +71,12 @@ export class Rental {
   }
 
   // Business logic methods
-  isOverdue(): boolean {
+  isOverdue(checkDate?: Date): boolean {
     if (this.status === RentalStatus.RETURNED) {
       return false;
     }
-    return new Date() > this.expectedReturnDate;
+    const dateToCheck = checkDate || new Date();
+    return dateToCheck > this.expectedReturnDate;
   }
 
   getDaysRented(): number {
@@ -84,17 +85,17 @@ export class Rental {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  getDaysOverdue(): number {
-    if (!this.isOverdue()) {
+  getDaysOverdue(checkDate?: Date): number {
+    const dateToCheck = checkDate || new Date();
+    if (!this.isOverdue(dateToCheck)) {
       return 0;
     }
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - this.expectedReturnDate.getTime());
+    const diffTime = Math.abs(dateToCheck.getTime() - this.expectedReturnDate.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  calculateLateFee(dailyLateFeeRate: number = 2.0): number {
-    const daysOverdue = this.getDaysOverdue();
+  calculateLateFee(dailyLateFeeRate: number = 2.0, checkDate?: Date): number {
+    const daysOverdue = this.getDaysOverdue(checkDate);
     return daysOverdue * dailyLateFeeRate;
   }
 

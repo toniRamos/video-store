@@ -115,8 +115,8 @@ export class RentalService {
 
     // Calculate late fee if overdue
     let lateFee = 0;
-    if (rental.isOverdue()) {
-      lateFee = rental.calculateLateFee();
+    if (rental.isOverdue(returnDate)) {
+      lateFee = rental.calculateLateFee(3.0, returnDate); // $3 per day late fee
     }
 
     // Return the film

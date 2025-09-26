@@ -1,0 +1,343 @@
+/* Return Modal Specific Styles */
+.return-modal {
+  max-width: 700px;
+}
+
+.return-form-container {
+  padding: 24px;
+}
+
+/* Rental Information Section */
+.rental-info-section {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.rental-info-section h3 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 8px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.info-item span {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 14px;
+  text-align: right;
+}
+
+.overdue-date {
+  color: #dc3545 !important;
+  font-weight: 600 !important;
+}
+
+/* Status Badge in Return Modal */
+.return-modal .status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.return-modal .status-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.return-modal .status-overdue {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.return-modal .status-returned {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Return Form */
+.return-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.date-input {
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  max-width: 200px;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Calculation Summary */
+.calculation-summary {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.calculation-summary h4 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 8px;
+}
+
+.summary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-item label {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.summary-item span {
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.summary-item.overdue {
+  background-color: #fff5f5;
+  border-color: #f8d7da;
+}
+
+.summary-item.overdue label,
+.summary-item.overdue span {
+  color: #721c24;
+}
+
+.summary-item.total {
+  background-color: #e3f2fd;
+  border-color: #bbdefb;
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.summary-item.total label,
+.summary-item.total span {
+  color: #1565c0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Warning and Success Messages */
+.overdue-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.on-time-message {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Return Modal Actions */
+.return-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.return-modal .cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.return-modal .cancel-button:hover:not(:disabled) {
+  background-color: #545b62;
+}
+
+.return-modal .submit-button {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.normal-return {
+  background-color: #28a745;
+  color: white;
+}
+
+.normal-return:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.overdue-return {
+  background-color: #dc3545;
+  color: white;
+}
+
+.overdue-return:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.return-modal .submit-button:disabled,
+.return-modal .cancel-button:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Responsive Design for Return Modal */
+@media (max-width: 768px) {
+  .return-modal {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .return-form-container {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    padding: 12px;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+  }
+
+  .info-item span {
+    text-align: left;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .return-modal .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .return-modal .cancel-button,
+  .return-modal .submit-button {
+    width: 100%;
+  }
+
+  .date-input {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .rental-info-section {
+    padding: 16px;
+  }
+
+  .calculation-summary {
+    padding: 16px;
+  }
+
+  .summary-item {
+    padding: 12px;
+  }
+
+  .summary-item.total {
+    font-size: 14px;
+  }
+
+  .summary-item.total label,
+  .summary-item.total span {
+    font-size: 14px;
+  }
+}

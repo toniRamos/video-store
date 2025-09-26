@@ -3,10 +3,15 @@ import { Film } from '../../films/types/Film';
 import { filmService } from '../../films/services/filmService';
 import { RentalInventoryTable } from '../components/RentalInventoryTable';
 import { RentalSearchBar } from '../components/RentalSearchBar';
+import { RentalDashboard } from '../components/RentalDashboard';
+// import { SimpleRentalDashboard } from '../components/SimpleRentalDashboard';
 import { useToast } from '../../shared/hooks/useToast';
 import './RentalManagementPage.css';
 
+type TabType = 'dashboard' | 'inventory';
+
 export const RentalManagementPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [films, setFilms] = useState<Film[]>([]);
   const [filteredFilms, setFilteredFilms] = useState<Film[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,58 +112,80 @@ export const RentalManagementPage: React.FC = () => {
     <div className="rental-management-page">
       <div className="page-header">
         <div className="header-content">
-          <h1>Inventory Management</h1>
+          <h1>Rental Management</h1>
           <p className="header-subtitle">
-            Manage film inventory and rental availability
+            Manage rentals, returns, and inventory
           </p>
         </div>
-        <button onClick={handleRefresh} className="refresh-button">
-          <span className="refresh-icon">🔄</span>
-          Refresh
-        </button>
-      </div>
-
-      <div className="management-controls">
-        <RentalSearchBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          filterBy={filterBy}
-          onFilterChange={setFilterBy}
-        />
-        
-        <div className="stats-summary">
-          <div className="stat-card">
-            <span className="stat-number">{films.length}</span>
-            <span className="stat-label">Total Films</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-number">
-              {films.filter(f => f.isAvailableForRental).length}
-            </span>
-            <span className="stat-label">Available</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-number">
-              {films.reduce((sum, f) => sum + f.rentedQuantity, 0)}
-            </span>
-            <span className="stat-label">Rented Copies</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-number">
-              {films.reduce((sum, f) => sum + f.quantity, 0)}
-            </span>
-            <span className="stat-label">Total Copies</span>
-          </div>
+        <div className="header-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            📊 Dashboard
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'inventory' ? 'active' : ''}`}
+            onClick={() => setActiveTab('inventory')}
+          >
+            📦 Inventory
+          </button>
         </div>
       </div>
 
-      <div className="inventory-container">
-        <RentalInventoryTable
-          films={filteredFilms}
-          onQuantityUpdate={handleQuantityUpdate}
-          onAvailabilityUpdate={handleAvailabilityUpdate}
-        />
-      </div>
+      {activeTab === 'dashboard' && (
+        <RentalDashboard />
+      )}
+
+      {activeTab === 'inventory' && (
+        <>
+          <div className="management-controls">
+            <RentalSearchBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              filterBy={filterBy}
+              onFilterChange={setFilterBy}
+            />
+            
+            <div className="stats-summary">
+              <div className="stat-card">
+                <span className="stat-number">{films.length}</span>
+                <span className="stat-label">Total Films</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">
+                  {films.filter(f => f.isAvailableForRental).length}
+                </span>
+                <span className="stat-label">Available</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">
+                  {films.reduce((sum, f) => sum + f.rentedQuantity, 0)}
+                </span>
+                <span className="stat-label">Rented Copies</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">
+                  {films.reduce((sum, f) => sum + f.quantity, 0)}
+                </span>
+                <span className="stat-label">Total Copies</span>
+              </div>
+              <button onClick={handleRefresh} className="refresh-button">
+                <span className="refresh-icon">🔄</span>
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div className="inventory-container">
+            <RentalInventoryTable
+              films={filteredFilms}
+              onQuantityUpdate={handleQuantityUpdate}
+              onAvailabilityUpdate={handleAvailabilityUpdate}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
