@@ -13,6 +13,7 @@ import {
   EditUserPage,
   UserHistoryPage
 } from './modules/users';
+import { RentalManagementPage } from './modules/rental/pages/RentalManagementPage';
 import './styles/global.css';
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
             <nav className="app-nav">
               <Link to="/" className="nav-link">🎬 Films</Link>
               <Link to="/users" className="nav-link">👥 Users</Link>
+              <Link to="/rental" className="nav-link">📦 Rental</Link>
             </nav>
           </div>
         </header>
@@ -42,6 +44,7 @@ const App: React.FC = () => {
               <Route path="/users/history" element={<UserHistoryPage />} />
               <Route path="/users/:id" element={<UserDetailPage />} />
               <Route path="/users/:id/edit" element={<EditUserPage />} />
+              <Route path="/rental" element={<RentalManagementPage />} />
             </Routes>
           </div>
         </main>

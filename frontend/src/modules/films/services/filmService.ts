@@ -138,6 +138,33 @@ class FilmService {
       throw new Error(error instanceof Error ? error.message : 'Network error');
     }
   }
+
+  async getFilmsAvailableForRental(): Promise<Film[]> {
+    const response = await this.request<Film[]>('/api/films/available-for-rental');
+    return response.data || [];
+  }
+
+  async updateFilmQuantity(id: string, quantity: number, availabilityQuantity?: number): Promise<Film> {
+    const response = await this.request<Film>(`/api/films/${id}/quantity`, {
+      method: 'PATCH',
+      body: JSON.stringify({ quantity, availabilityQuantity }),
+    });
+    if (!response.data) {
+      throw new Error('Failed to update film quantity');
+    }
+    return response.data;
+  }
+
+  async updateFilmAvailabilityQuantity(id: string, availabilityQuantity: number): Promise<Film> {
+    const response = await this.request<Film>(`/api/films/${id}/availability-quantity`, {
+      method: 'PATCH',
+      body: JSON.stringify({ availabilityQuantity }),
+    });
+    if (!response.data) {
+      throw new Error('Failed to update film availability quantity');
+    }
+    return response.data;
+  }
 }
 
 export const filmService = new FilmService();

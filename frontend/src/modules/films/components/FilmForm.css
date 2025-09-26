@@ -188,6 +188,36 @@
   100% { transform: translateY(-50%) rotate(360deg); }
 }
 
+/* Inventory Fields Layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group.half-width {
+  margin-bottom: 0;
+}
+
+.form-help {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .form-group.half-width {
+    margin-bottom: 0;
+  }
+}
+
 @media (max-width: 480px) {
   .film-form-content {
     padding: 1rem;

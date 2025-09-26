@@ -8,6 +8,10 @@ export interface Film {
   description: string;
   available: boolean;
   price: number;
+  quantity: number;
+  availabilityQuantity: number;
+  isAvailableForRental: boolean;
+  rentedQuantity: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +25,8 @@ export interface CreateFilmRequest {
   description: string;
   price: number;
   available?: boolean;
+  quantity?: number;
+  availabilityQuantity?: number;
 }
 
 export interface UpdateFilmRequest {
@@ -32,6 +38,8 @@ export interface UpdateFilmRequest {
   description?: string;
   price?: number;
   available?: boolean;
+  quantity?: number;
+  availabilityQuantity?: number;
 }
 
 // ApiResponse moved to shared types

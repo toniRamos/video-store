@@ -27,6 +27,8 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
     description: '',
     price: 0,
     available: true,
+    quantity: 1,
+    availabilityQuantity: 1,
   });
   
   const [loading, setLoading] = useState(false);
@@ -57,6 +59,8 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
         description: film.description,
         price: film.price,
         available: film.available,
+        quantity: film.quantity || 1,
+        availabilityQuantity: film.availabilityQuantity || film.quantity || 1,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load film');
@@ -68,14 +72,25 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'number' 
+    setFormData(prev => {
+      let newValue = type === 'number' 
         ? parseFloat(value) || 0
         : type === 'checkbox' 
           ? (e.target as HTMLInputElement).checked
-          : value
-    }));
+          : value;
+
+      const newFormData = { ...prev, [name]: newValue };
+
+      // Auto-adjust availability quantity when quantity changes
+      if (name === 'quantity' && type === 'number') {
+        const quantity = parseFloat(value) || 0;
+        if (prev.availabilityQuantity! > quantity) {
+          newFormData.availabilityQuantity = quantity;
+        }
+      }
+
+      return newFormData;
+    });
   };
 
   const checkForDuplicates = useCallback(async (title: string, director: string, releaseYear: number) => {
@@ -376,6 +391,39 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
             className="form-textarea"
             placeholder="Enter film description"
           />
+        </div>
+
+        <div className="form-row">
+          <div className="form-group half-width">
+            <label htmlFor="quantity">Total Copies</label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value={formData.quantity || 1}
+              onChange={handleInputChange}
+              min="1"
+              className="form-input"
+              required
+            />
+            <small className="form-help">Total number of copies in inventory</small>
+          </div>
+          
+          <div className="form-group half-width">
+            <label htmlFor="availabilityQuantity">Available Copies</label>
+            <input
+              type="number"
+              id="availabilityQuantity"
+              name="availabilityQuantity"
+              value={formData.availabilityQuantity || 1}
+              onChange={handleInputChange}
+              min="0"
+              max={formData.quantity || 1}
+              className="form-input"
+              required
+            />
+            <small className="form-help">Copies available for rental</small>
+          </div>
         </div>
 
         <div className="form-group checkbox-group">
