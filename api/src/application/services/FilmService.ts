@@ -10,9 +10,6 @@ export interface CreateFilmRequest {
   duration: number;
   description: string;
   price: number;
-  available?: boolean;
-  quantity?: number;
-  availabilityQuantity?: number;
 }
 
 export interface UpdateFilmRequest {
@@ -23,9 +20,6 @@ export interface UpdateFilmRequest {
   duration?: number;
   description?: string;
   price?: number;
-  available?: boolean;
-  quantity?: number;
-  availabilityQuantity?: number;
 }
 
 export class FilmService {
@@ -34,6 +28,8 @@ export class FilmService {
   async createFilm(request: CreateFilmRequest): Promise<Film> {
     const id = uuidv4();
     
+    // Set default values for inventory management
+    // New films start with 1 copy, available, and 1 copy available for rental
     const film = Film.create(
       id,
       request.title,
@@ -43,9 +39,9 @@ export class FilmService {
       request.duration,
       request.description,
       request.price,
-      request.available,
-      request.quantity,
-      request.availabilityQuantity
+      true, // available by default
+      1,    // 1 copy by default
+      1     // 1 copy available by default
     );
 
     return await this.filmRepository.save(film);
@@ -54,6 +50,8 @@ export class FilmService {
   async upsertFilm(request: CreateFilmRequest): Promise<{ film: Film; wasCreated: boolean }> {
     const id = uuidv4();
     
+    // Set default values for inventory management
+    // New films start with 1 copy, available, and 1 copy available for rental
     const film = Film.create(
       id,
       request.title,
@@ -63,9 +61,9 @@ export class FilmService {
       request.duration,
       request.description,
       request.price,
-      request.available,
-      request.quantity,
-      request.availabilityQuantity
+      true, // available by default
+      1,    // 1 copy by default
+      1     // 1 copy available by default
     );
 
     return await this.filmRepository.upsert(film);
@@ -129,7 +127,7 @@ export class FilmService {
       throw new Error('Film not found');
     }
 
-    // Create updated film with new values
+    // Create updated film with new values (inventory fields remain unchanged)
     const updatedFilm = new Film(
       existingFilm.id,
       request.title ?? existingFilm.title,
@@ -138,10 +136,10 @@ export class FilmService {
       request.genre ?? existingFilm.genre,
       request.duration ?? existingFilm.duration,
       request.description ?? existingFilm.description,
-      request.available ?? existingFilm.available,
+      existingFilm.available, // Keep existing availability status
       request.price ?? existingFilm.price,
-      request.quantity ?? existingFilm.quantity,
-      request.availabilityQuantity ?? existingFilm.availabilityQuantity,
+      existingFilm.quantity, // Keep existing quantity
+      existingFilm.availabilityQuantity, // Keep existing availability quantity
       existingFilm.createdAt,
       new Date()
     );

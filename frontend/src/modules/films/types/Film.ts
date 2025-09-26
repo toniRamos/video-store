@@ -24,9 +24,6 @@ export interface CreateFilmRequest {
   duration: number;
   description: string;
   price: number;
-  available?: boolean;
-  quantity?: number;
-  availabilityQuantity?: number;
 }
 
 export interface UpdateFilmRequest {
@@ -37,9 +34,6 @@ export interface UpdateFilmRequest {
   duration?: number;
   description?: string;
   price?: number;
-  available?: boolean;
-  quantity?: number;
-  availabilityQuantity?: number;
 }
 
 // ApiResponse moved to shared types
