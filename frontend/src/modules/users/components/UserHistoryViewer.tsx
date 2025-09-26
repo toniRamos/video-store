@@ -58,7 +58,7 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
       <div className="history-viewer">
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Cargando historial...</p>
+          <p>Loading history...</p>
         </div>
       </div>
     );
@@ -68,10 +68,10 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
     return (
       <div className="history-viewer">
         <div className="error-state">
-          <h3>❌ Error al cargar el historial</h3>
+          <h3>❌ Error loading history</h3>
           <p>{historyError}</p>
           <button onClick={() => fetchHistory()} className="retry-btn">
-            🔄 Reintentar
+            🔄 Retry
           </button>
         </div>
       </div>
@@ -83,8 +83,8 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
       <div className="history-viewer">
         <div className="empty-state">
           <div className="empty-icon">📋</div>
-          <h3>Sin historial</h3>
-          <p>No hay cambios registrados para {userName}.</p>
+          <h3>No History</h3>
+          <p>No changes recorded for {userName}.</p>
         </div>
       </div>
     );
@@ -94,8 +94,8 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
     <div className="history-viewer">
       <div className="history-header">
         <div className="header-title">
-          <h2>📋 Historial de {userName}</h2>
-          <p>Registro completo de todos los cambios realizados</p>
+          <h2>📋 History of {userName}</h2>
+          <p>Complete record of all changes made</p>
         </div>
 
         {summary && (
@@ -103,19 +103,19 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
             <div className="summary-stats">
               <div className="stat-item">
                 <span className="stat-number">{summary.totalEvents}</span>
-                <span className="stat-label">Total eventos</span>
+                <span className="stat-label">Total events</span>
               </div>
               <div className="stat-item create">
                 <span className="stat-number">{summary.actionCounts.CREATE}</span>
-                <span className="stat-label">Creaciones</span>
+                <span className="stat-label">Creations</span>
               </div>
               <div className="stat-item update">
                 <span className="stat-number">{summary.actionCounts.UPDATE}</span>
-                <span className="stat-label">Modificaciones</span>
+                <span className="stat-label">Modifications</span>
               </div>
               <div className="stat-item delete">
                 <span className="stat-number">{summary.actionCounts.DELETE}</span>
-                <span className="stat-label">Eliminaciones</span>
+                <span className="stat-label">Deletions</span>
               </div>
             </div>
 
@@ -150,13 +150,13 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
               disabled={currentPage === 1}
               className="pagination-btn prev"
             >
-              ← Anterior
+              ← Previous
             </button>
             
             <div className="pagination-info">
-              <span>Página {currentPage} de {totalPages}</span>
+              <span>Page {currentPage} of {totalPages}</span>
               <span className="showing-info">
-                Mostrando {historyData.data.history.length} de {historyData.data.totalCount} eventos
+                Showing {historyData.data.history.length} of {historyData.data.totalCount} events
               </span>
             </div>
             
@@ -165,7 +165,7 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
               disabled={currentPage === totalPages}
               className="pagination-btn next"
             >
-              Siguiente →
+              Next →
             </button>
           </div>
         )}
@@ -179,14 +179,14 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
           }}
           className="refresh-btn"
         >
-          🔄 Actualizar
+          🔄 Refresh
         </button>
         
         <button 
           onClick={() => setExpandedEntries(new Set())}
           className="collapse-all-btn"
         >
-          📝 Contraer todo
+          📝 Collapse all
         </button>
         
         <button 
@@ -196,7 +196,7 @@ const UserHistoryViewer: React.FC<UserHistoryViewerProps> = ({ userId, userName 
           }}
           className="expand-all-btn"
         >
-          📖 Expandir todo
+          📖 Expand all
         </button>
       </div>
     </div>

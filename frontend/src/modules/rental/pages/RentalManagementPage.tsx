@@ -107,7 +107,7 @@ export const RentalManagementPage: React.FC = () => {
     <div className="rental-management-page">
       <div className="page-header">
         <div className="header-content">
-          <h1>Rental Management</h1>
+          <h1>Inventory Management</h1>
           <p className="header-subtitle">
             Manage film inventory and rental availability
           </p>

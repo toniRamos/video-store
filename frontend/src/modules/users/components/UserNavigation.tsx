@@ -18,8 +18,8 @@ const UserNavigation: React.FC = () => {
   return (
     <div className="user-navigation">
       <div className="user-nav-header">
-        <h2 className="user-nav-title">👥 Gestión de Usuarios</h2>
-        <p className="user-nav-subtitle">Administra usuarios y consulta su historial de actividad</p>
+        <h2 className="user-nav-title">👥 User Management</h2>
+        <p className="user-nav-subtitle">Manage users and view their activity history</p>
       </div>
       
       <nav className="user-nav-menu">
@@ -28,8 +28,8 @@ const UserNavigation: React.FC = () => {
           className={`user-nav-link ${isActive('/users') ? 'active' : ''}`}
         >
           <span className="nav-icon">📋</span>
-          <span className="nav-text">Lista de Usuarios</span>
-          <span className="nav-description">Ver y administrar todos los usuarios</span>
+          <span className="nav-text">User List</span>
+          <span className="nav-description">View and manage all users</span>
         </Link>
         
         <Link 
@@ -37,8 +37,8 @@ const UserNavigation: React.FC = () => {
           className={`user-nav-link ${isActive('/users/create') ? 'active' : ''}`}
         >
           <span className="nav-icon">👤</span>
-          <span className="nav-text">Crear Usuario</span>
-          <span className="nav-description">Registrar un nuevo usuario</span>
+          <span className="nav-text">Create User</span>
+          <span className="nav-description">Register a new user</span>
         </Link>
         
         <Link 
@@ -46,8 +46,8 @@ const UserNavigation: React.FC = () => {
           className={`user-nav-link ${isActive('/users/history') ? 'active' : ''}`}
         >
           <span className="nav-icon">📚</span>
-          <span className="nav-text">Historial Global</span>
-          <span className="nav-description">Auditoría de todos los cambios</span>
+          <span className="nav-text">Global History</span>
+          <span className="nav-description">Audit trail of all changes</span>
         </Link>
       </nav>
     </div>

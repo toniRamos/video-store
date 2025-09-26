@@ -579,6 +579,7 @@ export class UserService {
     userSummaries: Array<{
       userId: string;
       userName: string;
+      userDni: string | null;
       eventCount: number;
       lastActivity: string;
     }>;

@@ -88,22 +88,33 @@
   color: #28a745;
 }
 
-.film-description {
+.film-detail .film-description {
   margin-bottom: 2rem;
   padding-top: 1rem;
   border-top: 1px solid #e9ecef;
+  /* Override FilmList restrictions */
+  max-height: none !important;
+  overflow: visible !important;
+  display: block !important;
+  -webkit-line-clamp: none !important;
+  line-clamp: none !important;
+  -webkit-box-orient: unset !important;
 }
 
-.film-description h3 {
+.film-detail .film-description h3 {
   color: #333;
   margin-bottom: 1rem;
   font-size: 1.3rem;
 }
 
-.film-description p {
+.film-detail .film-description p {
   color: #666;
   line-height: 1.7;
   font-size: 1rem;
+  /* Ensure full text display */
+  overflow: visible;
+  display: block;
+  white-space: normal;
 }
 
 .film-dates {

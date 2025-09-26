@@ -9,6 +9,7 @@ import './UserHistoryPage.css';
 interface UserSummary {
   userId: string;
   userName: string;
+  userDni?: string;
   eventCount: number;
   lastActivity: string;
 }
@@ -75,14 +76,17 @@ const UserHistoryPage: React.FC = () => {
   };
 
   const totalPages = historyData ? Math.ceil(historyData.data.totalCount / itemsPerPage) : 0;
-  const selectedUserName = userSummaries.find(u => u.userId === selectedUser)?.userName || 'Usuario';
+  const selectedUserSummary = userSummaries.find(u => u.userId === selectedUser);
+  const selectedUserName = selectedUserSummary 
+    ? `${selectedUserSummary.userName}${selectedUserSummary.userDni ? ` (${selectedUserSummary.userDni})` : ''}`
+    : 'User';
 
   if (historyLoading || summaryLoading) {
     return (
       <div className="history-page">
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Cargando historial completo...</p>
+          <p>Loading complete history...</p>
         </div>
       </div>
     );
@@ -95,13 +99,13 @@ const UserHistoryPage: React.FC = () => {
 
       <div className="history-filters">
         <div className="user-filter-section">
-          <h3>🔍 Filtrar por Usuario</h3>
+          <h3>🔍 Filter by User</h3>
           <div className="user-filter-controls">
             {selectedUser ? (
               <div className="selected-user">
-                <span>Mostrando historial de: <strong>{selectedUserName}</strong></span>
+                <span>Showing history for: <strong>{selectedUserName}</strong></span>
                 <button onClick={clearUserFilter} className="clear-filter-btn">
-                  ✕ Mostrar todos
+                  ✕ Show all
                 </button>
               </div>
             ) : (
@@ -112,11 +116,14 @@ const UserHistoryPage: React.FC = () => {
                     className="user-summary-card"
                     onClick={() => handleUserFilter(user.userId)}
                   >
-                    <div className="user-name">{user.userName}</div>
+                    <div className="user-name">
+                      {user.userName}
+                      {user.userDni && <span className="user-dni"> ({user.userDni})</span>}
+                    </div>
                     <div className="user-stats">
-                      <span className="event-count">{user.eventCount} eventos</span>
+                      <span className="event-count">{user.eventCount} events</span>
                       <span className="last-activity">
-                        Última: {new Date(user.lastActivity).toLocaleDateString('es-ES')}
+                        Last: {new Date(user.lastActivity).toLocaleDateString('en-US')}
                       </span>
                     </div>
                   </div>
@@ -130,20 +137,20 @@ const UserHistoryPage: React.FC = () => {
       <div className="history-content">
         {historyError ? (
           <div className="error-state">
-            <h3>❌ Error al cargar el historial</h3>
+            <h3>❌ Error loading history</h3>
             <p>{historyError}</p>
             <button onClick={() => fetchHistory()} className="retry-btn">
-              🔄 Reintentar
+              🔄 Retry
             </button>
           </div>
         ) : !historyData || historyData.data.history.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📋</div>
-            <h3>Sin historial</h3>
+            <h3>No History</h3>
             <p>
               {selectedUser 
-                ? `No hay cambios registrados para ${selectedUserName}.`
-                : 'No hay cambios registrados en el sistema.'
+                ? `No changes recorded for ${selectedUserName}.`
+                : 'No changes recorded in the system.'
               }
             </p>
           </div>
@@ -152,11 +159,11 @@ const UserHistoryPage: React.FC = () => {
             <div className="history-info">
               <div className="info-stats">
                 <span className="total-events">
-                  📊 Mostrando {historyData.data.history.length} de {historyData.data.totalCount} eventos
+                  📊 Showing {historyData.data.history.length} of {historyData.data.totalCount} events
                 </span>
                 {selectedUser && (
                   <span className="filtered-info">
-                    🔍 Filtrado por: {selectedUserName}
+                    🔍 Filtered by: {selectedUserName}
                   </span>
                 )}
               </div>
@@ -180,13 +187,13 @@ const UserHistoryPage: React.FC = () => {
                   disabled={currentPage === 1}
                   className="pagination-btn prev"
                 >
-                  ← Anterior
+                  ← Previous
                 </button>
                 
                 <div className="pagination-info">
-                  <span>Página {currentPage} de {totalPages}</span>
+                  <span>Page {currentPage} of {totalPages}</span>
                   <span className="showing-info">
-                    Mostrando {historyData.data.history.length} de {historyData.data.totalCount} eventos
+                    Showing {historyData.data.history.length} of {historyData.data.totalCount} events
                   </span>
                 </div>
                 
@@ -195,7 +202,7 @@ const UserHistoryPage: React.FC = () => {
                   disabled={currentPage === totalPages}
                   className="pagination-btn next"
                 >
-                  Siguiente →
+                  Next →
                 </button>
               </div>
             )}
@@ -217,7 +224,7 @@ const UserHistoryPage: React.FC = () => {
           }}
           className="refresh-btn"
         >
-          🔄 Actualizar
+          🔄 Refresh
         </button>
         
         {historyData && historyData.data.history.length > 0 && (
@@ -226,7 +233,7 @@ const UserHistoryPage: React.FC = () => {
               onClick={() => setExpandedEntries(new Set())}
               className="collapse-all-btn"
             >
-              📝 Contraer todo
+              📝 Collapse all
             </button>
             
             <button 
@@ -236,7 +243,7 @@ const UserHistoryPage: React.FC = () => {
               }}
               className="expand-all-btn"
             >
-              📖 Expandir todo
+              📖 Expand all
             </button>
           </>
         )}

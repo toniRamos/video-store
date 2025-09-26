@@ -151,7 +151,7 @@ const FilmList: React.FC = () => {
               </div>
               
               <div className="film-description">
-                <p>{film.description.substring(0, 100)}...</p>
+                <p>{film.description}</p>
               </div>
               
               <div className="film-actions">

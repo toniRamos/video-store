@@ -244,17 +244,68 @@ export class MongoUserAuditRepository implements UserAuditRepository {
 
   async getGlobalHistory(limit: number = 10, offset: number = 0): Promise<{ history: UserAuditLog[], totalCount: number }> {
     try {
-      const [documents, totalCount] = await Promise.all([
-        this.getCollection()
-          .find({})
-          .sort({ timestamp: -1 })
-          .skip(offset)
-          .limit(limit)
-          .toArray(),
-        this.getCollection().countDocuments({})
-      ]);
+      const collection = this.getCollection();
+      
+      // Get total count
+      const totalCount = await collection.countDocuments({});
+      
+      // Get audit logs with user information using aggregation
+      const documents = await collection.aggregate([
+        {
+          $sort: { timestamp: -1 }
+        },
+        {
+          $skip: offset
+        },
+        {
+          $limit: limit
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: 'id',
+            as: 'userInfo'
+          }
+        },
+        {
+          $addFields: {
+            userName: {
+              $cond: {
+                if: { $gt: [{ $size: '$userInfo' }, 0] },
+                then: {
+                  $concat: [
+                    { $arrayElemAt: ['$userInfo.firstName', 0] },
+                    ' ',
+                    { $arrayElemAt: ['$userInfo.lastName', 0] }
+                  ]
+                },
+                else: 'Unknown User'
+              }
+            },
+            userDni: {
+              $cond: {
+                if: { $gt: [{ $size: '$userInfo' }, 0] },
+                then: { $arrayElemAt: ['$userInfo.personalIdentifier', 0] },
+                else: null
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            userInfo: 0  // Remove the joined user data to keep response clean
+          }
+        }
+      ]).toArray();
 
-      const history = documents.map((doc: UserAuditLogDocument) => this.mapDocumentToEntity(doc));
+      const history = documents.map((doc: any) => {
+        const entity = this.mapDocumentToEntity(doc as UserAuditLogDocument);
+        // Add user information to the entity
+        (entity as any).userName = doc.userName;
+        (entity as any).userDni = doc.userDni;
+        return entity;
+      });
 
       return { history, totalCount };
     } catch (error) {
@@ -270,6 +321,7 @@ export class MongoUserAuditRepository implements UserAuditRepository {
     userSummaries: Array<{
       userId: string;
       userName: string;
+      userDni: string | null;
       eventCount: number;
       lastActivity: string;
     }>;
@@ -301,8 +353,8 @@ export class MongoUserAuditRepository implements UserAuditRepository {
         }
       });
 
-      // Get user summaries
-      const userSummaries = await collection.aggregate([
+      // Get user summaries with user information
+      const userSummariesWithNames = await collection.aggregate([
         {
           $group: {
             _id: '$userId',
@@ -311,38 +363,66 @@ export class MongoUserAuditRepository implements UserAuditRepository {
           }
         },
         {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: 'id',
+            as: 'userInfo'
+          }
+        },
+        {
+          $addFields: {
+            userName: {
+              $cond: {
+                if: { $gt: [{ $size: '$userInfo' }, 0] },
+                then: {
+                  $concat: [
+                    { $arrayElemAt: ['$userInfo.firstName', 0] },
+                    ' ',
+                    { $arrayElemAt: ['$userInfo.lastName', 0] }
+                  ]
+                },
+                else: 'Unknown User'
+              }
+            },
+            userDni: {
+              $cond: {
+                if: { $gt: [{ $size: '$userInfo' }, 0] },
+                then: { $arrayElemAt: ['$userInfo.personalIdentifier', 0] },
+                else: null
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            userId: '$_id',
+            userName: 1,
+            userDni: 1,
+            eventCount: 1,
+            lastActivity: 1,
+            _id: 0
+          }
+        },
+        {
           $sort: { lastActivity: -1 }
         }
       ]).toArray();
 
-      // Try to get user names from metadata or use userId as fallback
-      const userSummariesWithNames = await Promise.all(
-        userSummaries.map(async (summary) => {
-          // Try to find a recent document with user metadata
-          const recentDoc = await collection.findOne(
-            { userId: summary._id },
-            { sort: { timestamp: -1 } }
-          );
-          
-          let userName = summary._id; // Fallback to userId
-          if (recentDoc && recentDoc.metadata && recentDoc.metadata.performedBy) {
-            userName = recentDoc.metadata.performedBy;
-          }
-
-          return {
-            userId: summary._id,
-            userName,
-            eventCount: summary.eventCount,
-            lastActivity: summary.lastActivity.toISOString()
-          };
-        })
-      );
+      // Format lastActivity as ISO string
+      const formattedUserSummaries = userSummariesWithNames.map((summary: any) => ({
+        userId: summary.userId,
+        userName: summary.userName,
+        userDni: summary.userDni || null,
+        eventCount: summary.eventCount,
+        lastActivity: summary.lastActivity.toISOString()
+      }));
 
       return {
         totalEvents,
         totalUsers,
         actionCounts: actionCountsMap,
-        userSummaries: userSummariesWithNames
+        userSummaries: formattedUserSummaries
       };
     } catch (error) {
       console.error('❌ Error getting global history summary:', error);

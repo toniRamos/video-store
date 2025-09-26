@@ -9,6 +9,9 @@ export interface UserAuditLog {
     ipAddress?: string;
     performedBy?: string; // Future: quien hizo el cambio
   };
+  // Optional user information (populated in some queries)
+  userName?: string;
+  userDni?: string;
 }
 
 export interface FieldChange {

@@ -65,6 +65,9 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .film-card:hover {
@@ -128,6 +131,14 @@
   color: #666;
   font-size: 0.9rem;
   line-height: 1.5;
+  flex: 1;
+  min-height: 3rem;
+  max-height: 4.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .film-actions {

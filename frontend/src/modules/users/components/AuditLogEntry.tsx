@@ -42,8 +42,8 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return {
-      date: date.toLocaleDateString('es-ES'),
-      time: date.toLocaleTimeString('es-ES', { 
+      date: date.toLocaleDateString('en-US'),
+      time: date.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit' 
       })
@@ -55,8 +55,8 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
 
     if (dataType === 'boolean') {
       return {
-        old: oldValue === 'N/A' ? 'N/A' : (oldValue === 'true' || oldValue === 'Sí') ? 'Sí' : 'No',
-        new: (newValue === 'true' || newValue === 'Sí') ? 'Sí' : 'No'
+        old: oldValue === 'N/A' ? 'N/A' : (oldValue === 'true' || oldValue === 'Yes') ? 'Yes' : 'No',
+        new: (newValue === 'true' || newValue === 'Yes') ? 'Yes' : 'No'
       };
     }
 
@@ -78,7 +78,15 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
           >
             {getActionIcon(entry.action)}
           </span>
-          <span className="action-text">{entry.changesSummary}</span>
+          <div className="action-content">
+            <span className="action-text">{entry.changesSummary}</span>
+            {entry.userName && (
+              <span className="affected-user">
+                👤 {entry.userName}
+                {entry.userDni && <span className="user-dni"> ({entry.userDni})</span>}
+              </span>
+            )}
+          </div>
         </div>
         
         <div className="audit-meta">
@@ -96,7 +104,7 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
         <div className="audit-details">
           {entry.changes.length > 0 ? (
             <div className="changes-list">
-              <h4>Cambios realizados:</h4>
+              <h4>Changes made:</h4>
               {entry.changes.map((change, index) => {
                 const values = getValueDisplay(change);
                 return (
@@ -112,7 +120,7 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
                           <span className="new-value">"{values.new}"</span>
                         </>
                       ) : (
-                        <span className="new-value">Establecido a: "{values.new}"</span>
+                        <span className="new-value">Set to: "{values.new}"</span>
                       )}
                     </div>
                   </div>
@@ -121,26 +129,26 @@ const AuditLogEntry: React.FC<AuditLogEntryProps> = ({
             </div>
           ) : (
             <div className="no-changes">
-              No hay cambios específicos registrados.
+              No specific changes recorded.
             </div>
           )}
 
           {entry.metadata && (
             <div className="audit-metadata">
-              <h4>Información adicional:</h4>
+              <h4>Additional information:</h4>
               {entry.metadata.userAgent && (
                 <div className="metadata-item">
-                  <strong>Navegador:</strong> {entry.metadata.userAgent}
+                  <strong>Browser:</strong> {entry.metadata.userAgent}
                 </div>
               )}
               {entry.metadata.ipAddress && (
                 <div className="metadata-item">
-                  <strong>Dirección IP:</strong> {entry.metadata.ipAddress}
+                  <strong>IP Address:</strong> {entry.metadata.ipAddress}
                 </div>
               )}
               {entry.metadata.performedBy && (
                 <div className="metadata-item">
-                  <strong>Realizado por:</strong> {entry.metadata.performedBy}
+                  <strong>Performed by:</strong> {entry.metadata.performedBy}
                 </div>
               )}
             </div>

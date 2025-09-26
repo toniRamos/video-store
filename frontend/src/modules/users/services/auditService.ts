@@ -17,6 +17,9 @@ export interface AuditLogEntry {
     ipAddress?: string;
     performedBy?: string;
   };
+  // User information (populated in global history queries)
+  userName?: string;
+  userDni?: string | null;
 }
 
 export interface UserHistoryResponse {
