@@ -4,6 +4,7 @@ import { RentalAnalytics, Rental, RentalStatus } from '../types/Rental';
 import { RentalModal } from './RentalModal';
 // import { SimpleRentalModal } from './SimpleRentalModal';
 import { ReturnModal } from './ReturnModal';
+import { CustomerLookup } from './CustomerLookup';
 import { userService } from '../../users/services/userService';
 import { filmService } from '../../films/services/filmService';
 import { User } from '../../users/types/User';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export const RentalDashboard: React.FC<Props> = () => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'customer-lookup'>('dashboard');
   const [analytics, setAnalytics] = useState<RentalAnalytics | null>(null);
   const [overdueRentals, setOverdueRentals] = useState<Rental[]>([]);
   const [recentRentals, setRecentRentals] = useState<Rental[]>([]);
@@ -207,25 +209,48 @@ export const RentalDashboard: React.FC<Props> = () => {
   return (
     <div className="rental-dashboard">
       <div className="dashboard-header">
-        <h1>Rental Dashboard</h1>
-        <div className="dashboard-actions">
+        <h1>🎬 Video Store Management</h1>
+        
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
           <button
-            onClick={() => setShowRentalModal(true)}
-            className="primary-button"
+            className={`tab-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
           >
-            + New Rental
+            📊 Dashboard
           </button>
           <button
-            onClick={loadDashboardData}
-            className="secondary-button"
+            className={`tab-button ${activeTab === 'customer-lookup' ? 'active' : ''}`}
+            onClick={() => setActiveTab('customer-lookup')}
           >
-            🔄 Refresh
+            👤 Customer Lookup
           </button>
         </div>
+
+        {/* Dashboard Actions (only show on dashboard tab) */}
+        {activeTab === 'dashboard' && (
+          <div className="dashboard-actions">
+            <button
+              onClick={() => setShowRentalModal(true)}
+              className="primary-button"
+            >
+              + New Rental
+            </button>
+            <button
+              onClick={loadDashboardData}
+              className="secondary-button"
+            >
+              🔄 Refresh
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Métricas principales */}
-      {analytics && (
+      {/* Tab Content */}
+      {activeTab === 'dashboard' && (
+        <>
+          {/* Métricas principales */}
+          {analytics && (
         <div className="metrics-grid">
           <div className="metric-card">
             <h3>Total Rentals</h3>
@@ -385,14 +410,29 @@ export const RentalDashboard: React.FC<Props> = () => {
         />
       )}
 
-      {showReturnModal && selectedRental && (
-        <ReturnModal
-          rental={selectedRental}
-          onClose={() => {
-            setShowReturnModal(false);
-            setSelectedRental(null);
-          }}
-          onSuccess={handleReturnSuccess}
+          {showReturnModal && selectedRental && (
+            <ReturnModal
+              rental={selectedRental}
+              onClose={() => {
+                setShowReturnModal(false);
+                setSelectedRental(null);
+              }}
+              onSuccess={handleReturnSuccess}
+            />
+          )}
+        </>
+      )}
+
+      {/* Customer Lookup Tab */}
+      {activeTab === 'customer-lookup' && (
+        <CustomerLookup />
+      )}
+
+      {/* Rental Modal (available from dashboard) */}
+      {showRentalModal && (
+        <RentalModal
+          onClose={() => setShowRentalModal(false)}
+          onSuccess={handleRentalSuccess}
         />
       )}
     </div>
