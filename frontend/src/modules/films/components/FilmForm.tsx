@@ -22,7 +22,7 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
     title: '',
     director: '',
     releaseYear: new Date().getFullYear(),
-    genre: '',
+    genre: [],
     duration: 0,
     description: '',
     price: 0,
@@ -133,8 +133,11 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
     if (!formData.director.trim()) {
       throw new Error('Director is required');
     }
-    if (!formData.genre.trim()) {
-      throw new Error('Genre is required');
+    if (!formData.genre || formData.genre.length === 0) {
+      throw new Error('At least one genre is required');
+    }
+    if (formData.genre.length > 5) {
+      throw new Error('Maximum 5 genres allowed');
     }
     if (formData.duration <= 0) {
       throw new Error('Duration must be greater than 0');
@@ -292,38 +295,38 @@ const FilmForm: React.FC<FilmFormProps> = ({ isEdit = false }) => {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="genre">Genre *</label>
-            <select
-              id="genre"
-              name="genre"
-              value={formData.genre}
-              onChange={handleInputChange}
-              required
-              className="form-input"
-            >
-              <option value="">Select a genre</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Comedy">Comedy</option>
-              <option value="Crime">Crime</option>
-              <option value="Drama">Drama</option>
-              <option value="Fantasy">Fantasy</option>
-              <option value="Horror">Horror</option>
-              <option value="Mystery">Mystery</option>
-              <option value="Romance">Romance</option>
-              <option value="Sci-Fi">Sci-Fi</option>
-              <option value="Thriller">Thriller</option>
-              <option value="Documentary">Documentary</option>
-              <option value="Animation">Animation</option>
-              <option value="Family">Family</option>
-              <option value="Musical">Musical</option>
-              <option value="Western">Western</option>
-              <option value="War">War</option>
-              <option value="Biography">Biography</option>
-              <option value="History">History</option>
-              <option value="Sport">Sport</option>
-            </select>
+          <div className="form-group full-width">
+            <label>Genres * (select 1-5)</label>
+            <div className="genre-checkboxes">
+              {['Action', 'Adventure', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'Documentary', 'Animation', 'Family', 'Musical', 'Western', 'War', 'Biography', 'History', 'Sport'].map((genre) => (
+                <label key={genre} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.genre.includes(genre)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        if (formData.genre.length < 5) {
+                          setFormData(prev => ({
+                            ...prev,
+                            genre: [...prev.genre, genre]
+                          }));
+                        }
+                      } else {
+                        setFormData(prev => ({
+                          ...prev,
+                          genre: prev.genre.filter(g => g !== genre)
+                        }));
+                      }
+                    }}
+                    disabled={!formData.genre.includes(genre) && formData.genre.length >= 5}
+                  />
+                  <span>{genre}</span>
+                </label>
+              ))}
+            </div>
+            <small className="form-hint">
+              Selected: {formData.genre.length} / 5 {formData.genre.length > 0 && `(${formData.genre.join(', ')})`}
+            </small>
           </div>
 
           <div className="form-group">

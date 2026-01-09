@@ -36,7 +36,7 @@ const DuplicateWarning: React.FC<DuplicateWarningProps> = ({
                   <h4>{film.title}</h4>
                   <p><strong>Director:</strong> {film.director}</p>
                   <p><strong>Year:</strong> {film.releaseYear}</p>
-                  <p><strong>Genre:</strong> {film.genre}</p>
+                  <p><strong>Genre:</strong> {film.genre.join(', ')}</p>
                   <p><strong>Price:</strong> ${film.price}</p>
                 </div>
               </div>

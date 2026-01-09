@@ -6,7 +6,7 @@ export interface FilmRepository {
   findById(id: string): Promise<Film | null>;
   findAll(): Promise<Film[]>;
   findByTitle(title: string): Promise<Film[]>;
-  findByGenre(genre: string): Promise<Film[]>;
+  findByGenre(genre: string | string[]): Promise<Film[]>;
   findByDirector(director: string): Promise<Film[]>;
   findByAvailability(available: boolean): Promise<Film[]>;
   findPotentialDuplicates(title: string, director: string, releaseYear: number): Promise<Film[]>;

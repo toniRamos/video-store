@@ -6,7 +6,7 @@ export interface CreateFilmRequest {
   title: string;
   director: string;
   releaseYear: number;
-  genre: string;
+  genre: string | string[];
   duration: number;
   description: string;
   price: number;
@@ -16,7 +16,7 @@ export interface UpdateFilmRequest {
   title?: string;
   director?: string;
   releaseYear?: number;
-  genre?: string;
+  genre?: string | string[];
   duration?: number;
   description?: string;
   price?: number;
@@ -97,9 +97,22 @@ export class FilmService {
     return await this.filmRepository.findByTitle(title);
   }
 
-  async getFilmsByGenre(genre: string): Promise<Film[]> {
-    if (!genre || genre.trim().length === 0) {
+  async getFilmsByGenre(genre: string | string[]): Promise<Film[]> {
+    if (!genre) {
       throw new Error('Genre is required');
+    }
+
+    if (Array.isArray(genre)) {
+      if (genre.length === 0) {
+        throw new Error('At least one genre is required');
+      }
+      if (genre.some(g => !g || g.trim().length === 0)) {
+        throw new Error('All genres must be non-empty strings');
+      }
+    } else {
+      if (genre.trim().length === 0) {
+        throw new Error('Genre is required');
+      }
     }
     
     return await this.filmRepository.findByGenre(genre);

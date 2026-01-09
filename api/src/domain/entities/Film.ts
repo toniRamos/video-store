@@ -4,7 +4,7 @@ export class Film {
     public readonly title: string,
     public readonly director: string,
     public readonly releaseYear: number,
-    public readonly genre: string,
+    genre: string | string[],
     public readonly duration: number, // in minutes
     public readonly description: string,
     public readonly available: boolean = true,
@@ -14,8 +14,12 @@ export class Film {
     public readonly createdAt: Date = new Date(),
     public readonly updatedAt: Date = new Date()
   ) {
+    // Normalize genre to always be an array for consistency
+    this.genre = Array.isArray(genre) ? genre : [genre];
     this.validateFilm();
   }
+
+  public readonly genre: string[];
 
   private validateFilm(): void {
     if (!this.title || this.title.trim().length === 0) {
@@ -30,8 +34,16 @@ export class Film {
       throw new Error('Release year must be between 1895 and 5 years in the future');
     }
 
-    if (!this.genre || this.genre.trim().length === 0) {
-      throw new Error('Genre is required');
+    if (!this.genre || !Array.isArray(this.genre) || this.genre.length === 0) {
+      throw new Error('At least one genre is required');
+    }
+
+    if (this.genre.length > 5) {
+      throw new Error('Maximum 5 genres allowed');
+    }
+
+    if (this.genre.some(g => !g || g.trim().length === 0)) {
+      throw new Error('All genres must be non-empty strings');
     }
 
     if (this.duration <= 0) {
@@ -60,7 +72,7 @@ export class Film {
     title: string,
     director: string,
     releaseYear: number,
-    genre: string,
+    genre: string | string[],
     duration: number,
     description: string,
     price: number,

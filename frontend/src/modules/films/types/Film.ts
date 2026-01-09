@@ -3,7 +3,7 @@ export interface Film {
   title: string;
   director: string;
   releaseYear: number;
-  genre: string;
+  genre: string[];
   duration: number;
   description: string;
   available: boolean;
@@ -20,7 +20,7 @@ export interface CreateFilmRequest {
   title: string;
   director: string;
   releaseYear: number;
-  genre: string;
+  genre: string[];
   duration: number;
   description: string;
   price: number;
@@ -30,7 +30,7 @@ export interface UpdateFilmRequest {
   title?: string;
   director?: string;
   releaseYear?: number;
-  genre?: string;
+  genre?: string[];
   duration?: number;
   description?: string;
   price?: number;

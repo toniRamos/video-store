@@ -129,7 +129,11 @@ const FilmDetail: React.FC = () => {
             </div>
             <div className="meta-row">
               <span className="meta-label">Genre:</span>
-              <span className="meta-value">{film.genre}</span>
+              <div className="meta-value genre-badges">
+                {film.genre.map((g, idx) => (
+                  <span key={idx} className="genre-badge">{g}</span>
+                ))}
+              </div>
             </div>
             <div className="meta-row">
               <span className="meta-label">Duration:</span>

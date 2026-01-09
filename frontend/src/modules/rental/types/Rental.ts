@@ -75,7 +75,7 @@ export interface RentalWithDetails extends Rental {
     id: string;
     title: string;
     director: string;
-    genre: string;
+    genre: string[];
     price: number;
   };
 }

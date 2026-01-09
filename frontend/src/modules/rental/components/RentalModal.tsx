@@ -64,7 +64,7 @@ export const RentalModal: React.FC<Props> = ({ onClose, onSuccess }) => {
       const filtered = availableFilms.filter(film => 
         film.title.toLowerCase().includes(query.toLowerCase()) ||
         film.director.toLowerCase().includes(query.toLowerCase()) ||
-        film.genre.toLowerCase().includes(query.toLowerCase())
+        film.genre.some(g => g.toLowerCase().includes(query.toLowerCase()))
       ).slice(0, 10);
       setFilmResults(filtered);
     } catch (err) {
@@ -264,7 +264,7 @@ export const RentalModal: React.FC<Props> = ({ onClose, onSuccess }) => {
                       <div className="film-info">
                         <span className="film-title">{film.title}</span>
                         <span className="film-details">
-                          {film.director} • {film.genre} • ${film.price}/day
+                          {film.director} • {film.genre.join(', ')} • ${film.price}/day
                         </span>
                         <span className="film-availability">
                           Available: {film.availabilityQuantity} copies

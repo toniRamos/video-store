@@ -61,7 +61,7 @@ const FilmList: React.FC = () => {
   const filteredFilms = films.filter(film =>
     film.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     film.director.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    film.genre.toLowerCase().includes(searchTerm.toLowerCase())
+    film.genre.some(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (loading) {
@@ -145,7 +145,12 @@ const FilmList: React.FC = () => {
               <div className="film-info">
                 <p><strong>Director:</strong> {film.director}</p>
                 <p><strong>Year:</strong> {film.releaseYear}</p>
-                <p><strong>Genre:</strong> {film.genre}</p>
+                <p><strong>Genre:</strong></p>
+                <div className="genre-tags">
+                  {film.genre.map((g, idx) => (
+                    <span key={idx} className="genre-tag">{g}</span>
+                  ))}
+                </div>
                 <p><strong>Duration:</strong> {film.duration} min</p>
                 <p><strong>Price:</strong> ${film.price.toFixed(2)}</p>
               </div>

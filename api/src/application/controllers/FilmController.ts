@@ -32,7 +32,15 @@ export class FilmController {
    *               releaseYear:
    *                 type: number
    *               genre:
-   *                 type: string
+   *                 oneOf:
+   *                   - type: string
+   *                   - type: array
+   *                     items:
+   *                       type: string
+   *                     minItems: 1
+   *                     maxItems: 5
+   *                 description: Film genre(s) - can be a single string or array of strings (max 5)
+   *                 example: ["Action", "Sci-Fi"]
    *               duration:
    *                 type: number
    *               description:
@@ -85,7 +93,8 @@ export class FilmController {
    *         name: genre
    *         schema:
    *           type: string
-   *         description: Filter by genre
+   *         description: Filter by genre(s) - single genre or comma-separated list (e.g., 'Action' or 'Action,Drama,Thriller')
+   *         example: Action,Sci-Fi
    *       - in: query
    *         name: director
    *         schema:
@@ -109,7 +118,11 @@ export class FilmController {
       let films;
       
       if (genre) {
-        films = await this.filmService.getFilmsByGenre(genre as string);
+        // Parse genre: if contains comma, split into array, otherwise use as single string
+        const genreParam = typeof genre === 'string' && genre.includes(',') 
+          ? genre.split(',').map(g => g.trim()).filter(g => g.length > 0)
+          : genre as string;
+        films = await this.filmService.getFilmsByGenre(genreParam);
       } else if (director) {
         films = await this.filmService.getFilmsByDirector(director as string);
       } else if (available !== undefined) {
@@ -204,7 +217,14 @@ export class FilmController {
    *               releaseYear:
    *                 type: number
    *               genre:
-   *                 type: string
+   *                 oneOf:
+   *                   - type: string
+   *                   - type: array
+   *                     items:
+   *                       type: string
+   *                     minItems: 1
+   *                     maxItems: 5
+   *                 description: Film genre(s) - can be a single string or array of strings (max 5)
    *               duration:
    *                 type: number
    *               description:
@@ -427,8 +447,16 @@ export class FilmController {
    *                 type: number
    *                 example: 1999
    *               genre:
-   *                 type: string
-   *                 example: "Sci-Fi"
+   *                 oneOf:
+   *                   - type: string
+   *                     example: "Sci-Fi"
+   *                   - type: array
+   *                     items:
+   *                       type: string
+   *                     minItems: 1
+   *                     maxItems: 5
+   *                     example: ["Action", "Sci-Fi"]
+   *                 description: Film genre(s) - can be a single string or array of strings (max 5)
    *               duration:
    *                 type: number
    *                 example: 136

@@ -84,8 +84,9 @@ class FilmService {
     return response.data;
   }
 
-  async getFilmsByGenre(genre: string): Promise<Film[]> {
-    const response = await this.request<Film[]>(`/api/films?genre=${encodeURIComponent(genre)}`);
+  async getFilmsByGenre(genre: string | string[]): Promise<Film[]> {
+    const genreParam = Array.isArray(genre) ? genre.join(',') : genre;
+    const response = await this.request<Film[]>(`/api/films?genre=${encodeURIComponent(genreParam)}`);
     return response.data || [];
   }
 

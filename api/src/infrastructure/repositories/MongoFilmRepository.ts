@@ -9,7 +9,7 @@ interface FilmDocument {
   title: string;
   director: string;
   releaseYear: number;
-  genre: string;
+  genre: string | string[]; // Support both legacy string and new array format
   duration: number;
   description: string;
   available: boolean;
@@ -57,7 +57,8 @@ export class MongoFilmRepository implements FilmRepository {
       document.title,
       document.director,
       document.releaseYear,
-      document.genre,
+      // Normalize genre to array for backward compatibility with legacy data
+      Array.isArray(document.genre) ? document.genre : [document.genre],
       document.duration,
       document.description,
       document.available,
@@ -177,12 +178,20 @@ export class MongoFilmRepository implements FilmRepository {
     }
   }
 
-  async findByGenre(genre: string): Promise<Film[]> {
+  async findByGenre(genre: string | string[]): Promise<Film[]> {
     try {
       const collection = this.getCollection();
-      const documents = await collection.find({
-        genre: { $regex: genre, $options: 'i' }
-      }).toArray();
+      let query: any;
+
+      if (Array.isArray(genre)) {
+        // Search for films that have at least one of the provided genres
+        query = { genre: { $in: genre } };
+      } else {
+        // Single genre - use regex for partial match (backward compatible)
+        query = { genre: { $regex: genre, $options: 'i' } };
+      }
+
+      const documents = await collection.find(query).toArray();
       
       return documents.map(doc => this.documentToFilm(doc));
     } catch (error) {

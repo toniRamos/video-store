@@ -94,7 +94,7 @@ export const RentalInventoryTable: React.FC<RentalInventoryTableProps> = ({
                     <div className="film-info">
                       <div className="film-title">{film.title}</div>
                       <div className="film-meta">
-                        {film.director} • {film.releaseYear} • {film.genre}
+                        {film.director} • {film.releaseYear} • {film.genre.join(', ')}
                       </div>
                     </div>
                   </td>

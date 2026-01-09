@@ -88,6 +88,26 @@
   color: #28a745;
 }
 
+/* Genre badges styling for detail view */
+.meta-value.genre-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.genre-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
 .film-detail .film-description {
   margin-bottom: 2rem;
   padding-top: 1rem;

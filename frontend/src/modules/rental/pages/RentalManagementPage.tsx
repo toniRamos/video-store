@@ -49,7 +49,7 @@ export const RentalManagementPage: React.FC = () => {
       filtered = filtered.filter(film =>
         film.title.toLowerCase().includes(term) ||
         film.director.toLowerCase().includes(term) ||
-        film.genre.toLowerCase().includes(term)
+        film.genre.some(g => g.toLowerCase().includes(term))
       );
     }
 
