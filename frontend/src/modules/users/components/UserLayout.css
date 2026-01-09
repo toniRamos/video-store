@@ -1,22 +1,27 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   USER LAYOUT · THE VAULT
+   Container Structure
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .user-layout {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--space-lg);
 }
 
 .user-content {
   margin-top: 0;
 }
 
-/* Responsive adjustments */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .user-layout {
-    padding: 16px;
+    padding: var(--space-md);
   }
 }
 
 @media (max-width: 480px) {
   .user-layout {
-    padding: 12px;
+    padding: var(--space-sm);
   }
 }

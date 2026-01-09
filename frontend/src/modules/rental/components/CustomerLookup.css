@@ -1,143 +1,177 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOMER LOOKUP · THE VAULT
+   Member Search & History
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .customer-lookup {
-  padding: 20px;
+  padding: var(--space-lg);
   max-width: 1200px;
   margin: 0 auto;
-  background: #f8f9fa;
   min-height: 100vh;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* ─── HEADER ────────────────────────────────────────────────────────────── */
 .lookup-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--space-xl);
 }
 
 .lookup-header h2 {
-  color: #2c3e50;
-  margin: 0 0 10px 0;
-  font-size: 2em;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .lookup-header p {
-  color: #6c757d;
+  font-family: var(--font-elegant);
+  font-style: italic;
+  color: var(--text-muted);
   margin: 0;
 }
 
-/* Search Section */
+/* ─── SEARCH SECTION ────────────────────────────────────────────────────── */
 .search-section {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 25px;
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .search-controls {
   display: flex;
-  gap: 20px;
-  align-items: end;
+  gap: var(--space-lg);
+  align-items: flex-end;
   flex-wrap: wrap;
 }
 
 .search-type {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-xs);
 }
 
 .search-type label {
+  font-family: var(--font-display);
   font-weight: 600;
-  color: #495057;
-  font-size: 0.9em;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
 .search-type select {
-  padding: 10px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 1em;
-  background: white;
+  padding: 0.75rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
   min-width: 120px;
+}
+
+.search-type select:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .search-input {
   display: flex;
-  gap: 10px;
+  gap: var(--space-sm);
   flex: 1;
   min-width: 300px;
 }
 
 .search-input input {
   flex: 1;
-  padding: 12px 15px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 1em;
-  transition: border-color 0.3s;
+  padding: 0.875rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+}
+
+.search-input input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-input input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .search-input button {
-  padding: 12px 20px;
-  background: #007bff;
-  color: white;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-deep) 100%);
+  color: var(--text-inverse);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-base);
   white-space: nowrap;
 }
 
 .search-input button:hover:not(:disabled) {
-  background: #0056b3;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
 }
 
 .search-input button:disabled {
-  background: #6c757d;
+  background: var(--vault-muted);
   cursor: not-allowed;
 }
 
 .error-message {
-  margin-top: 15px;
-  padding: 12px;
-  background: #f8d7da;
-  color: #721c24;
-  border-radius: 8px;
-  border-left: 4px solid #dc3545;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(196, 92, 92, 0.1);
+  color: var(--accent-crimson);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-crimson);
 }
 
-/* Customer Info */
+/* ─── CUSTOMER INFO ─────────────────────────────────────────────────────── */
 .customer-info {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 25px;
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .customer-info h3 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 10px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg) 0;
+  border-bottom: 1px solid var(--vault-border);
+  padding-bottom: var(--space-sm);
 }
 
 .customer-details {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
+  background: var(--vault-surface);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
 }
 
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  gap: var(--space-md);
 }
 
 .info-item {
@@ -146,30 +180,34 @@
 }
 
 .info-item strong {
-  color: #495057;
-  margin-right: 10px;
+  color: var(--text-muted);
+  margin-right: var(--space-sm);
+  font-weight: 500;
 }
 
-/* Rental History */
+/* ─── RENTAL HISTORY ────────────────────────────────────────────────────── */
 .rental-history {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
 }
 
 .history-summary {
-  margin-bottom: 25px;
+  margin-bottom: var(--space-xl);
 }
 
 .history-summary h3 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
 }
 
 .summary-stats {
   display: flex;
-  gap: 25px;
+  gap: var(--space-lg);
   flex-wrap: wrap;
 }
 
@@ -177,43 +215,60 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  padding: var(--space-md);
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
   min-width: 120px;
+  transition: all var(--transition-base);
+}
+
+.stat-item:hover {
+  border-color: var(--gold-primary);
 }
 
 .stat-number {
-  font-size: 2em;
-  font-weight: bold;
-  color: #007bff;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .stat-label {
-  font-size: 0.9em;
-  color: #6c757d;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
   font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .stat-label.overdue {
-  color: #dc3545;
+  color: var(--accent-crimson);
 }
 
 .stat-item:has(.overdue) .stat-number {
-  color: #dc3545;
+  background: linear-gradient(135deg, var(--accent-crimson) 0%, #b04a4a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
-/* Rental Sections */
+/* ─── RENTAL SECTIONS ───────────────────────────────────────────────────── */
 .rental-section {
-  margin-bottom: 30px;
+  margin-bottom: var(--space-xl);
 }
 
 .rental-section h4 {
-  color: #2c3e50;
-  margin: 0 0 15px 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e9ecef;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--vault-border);
 }
 
 .rentals-table {
@@ -223,97 +278,110 @@
 .rentals-table table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--vault-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .rentals-table th,
 .rentals-table td {
-  padding: 12px;
+  padding: var(--space-md);
   text-align: left;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--vault-border);
 }
 
 .rentals-table th {
-  background: #f8f9fa;
+  background: var(--vault-card);
+  font-family: var(--font-display);
   font-weight: 600;
-  color: #495057;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-size: 0.85em;
+  color: var(--text-muted);
 }
 
 .rentals-table td {
   vertical-align: middle;
+  color: var(--text-primary);
 }
 
 .overdue-row {
-  background: rgba(220, 53, 69, 0.05);
+  background: rgba(196, 92, 92, 0.05);
 }
 
 .overdue-row td {
-  border-bottom-color: rgba(220, 53, 69, 0.2);
+  border-bottom-color: rgba(196, 92, 92, 0.2);
 }
 
 .overdue-badge {
   display: inline-block;
-  background: #dc3545;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75em;
+  background: var(--accent-crimson);
+  color: var(--text-primary);
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
   font-weight: 600;
-  margin-left: 8px;
+  margin-left: var(--space-sm);
 }
 
 .status-badge {
-  padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 0.8em;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .status-active {
-  background: #d4edda;
-  color: #155724;
+  background: rgba(92, 184, 122, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(92, 184, 122, 0.3);
 }
 
 .status-returned {
-  background: #d1ecf1;
-  color: #0c5460;
+  background: rgba(92, 141, 196, 0.15);
+  color: var(--accent-sapphire);
+  border: 1px solid rgba(92, 141, 196, 0.3);
 }
 
 .return-btn {
-  background: #28a745;
-  color: white;
+  background: var(--accent-emerald);
+  color: var(--text-inverse);
   border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 0.85em;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-base);
 }
 
 .return-btn:hover {
-  background: #218838;
+  background: #4da36a;
   transform: translateY(-1px);
 }
 
 .no-rentals {
   text-align: center;
-  padding: 40px;
-  color: #6c757d;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
 }
 
 .no-rentals p {
-  font-size: 1.1em;
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.1rem;
   margin: 0;
 }
 
-/* Responsive Design */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .customer-lookup {
-    padding: 15px;
+    padding: var(--space-md);
   }
   
   .search-controls {
@@ -334,11 +402,11 @@
   }
   
   .rentals-table {
-    font-size: 0.9em;
+    font-size: 0.9rem;
   }
   
   .rentals-table th,
   .rentals-table td {
-    padding: 8px;
+    padding: var(--space-sm);
   }
 }

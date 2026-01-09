@@ -22,12 +22,12 @@ const App: React.FC = () => {
       <div className="app">
         <header className="app-header">
           <div className="container">
-            <h1 className="app-title">🎬 Video Store</h1>
-            <p className="app-subtitle">Manage your film collection and users</p>
+            <h1 className="app-title">The Vault</h1>
+            <p className="app-subtitle">Premium Film Collection</p>
             <nav className="app-nav">
-              <Link to="/" className="nav-link">🎬 Films</Link>
-              <Link to="/users" className="nav-link">👥 Users</Link>
-              <Link to="/rental" className="nav-link">📦 Rental</Link>
+              <Link to="/" className="nav-link">Films</Link>
+              <Link to="/users" className="nav-link">Members</Link>
+              <Link to="/rental" className="nav-link">Rentals</Link>
             </nav>
           </div>
         </header>
@@ -51,7 +51,7 @@ const App: React.FC = () => {
         
         <footer className="app-footer">
           <div className="container">
-            <p>&copy; 2025 Video Store. Built with React & TypeScript.</p>
+            <p>The Vault · Premium Cinema Experience · Est. 2025</p>
           </div>
         </footer>
       </div>

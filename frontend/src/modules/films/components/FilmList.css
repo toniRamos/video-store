@@ -1,43 +1,95 @@
-/* FilmList.css */
+/* ═══════════════════════════════════════════════════════════════════════════
+   FILM LIST · THE VAULT
+   Cinema Collection Grid
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .film-list {
   max-width: 100%;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* ─── HEADER ────────────────────────────────────────────────────────────── */
 .film-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .film-list-header h1 {
-  color: #333;
+  font-family: var(--font-display);
   font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  position: relative;
 }
 
+.film-list-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-primary), transparent);
+}
+
+/* ─── CONTROLS ──────────────────────────────────────────────────────────── */
 .film-list-controls {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
+/* Search Box */
+.search-box {
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+/* Genre Filter Section */
 .genre-filter-section {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
+  padding: var(--space-lg);
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
 }
 
 .genre-filter-label {
+  font-family: var(--font-display);
   font-weight: 600;
-  color: #495057;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
 .genre-filter-chips {
@@ -47,177 +99,228 @@
 }
 
 .genre-chip {
-  padding: 0.4rem 0.8rem;
-  border: 2px solid #dee2e6;
-  background: white;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--vault-border);
+  background: var(--vault-card);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 500;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .genre-chip:hover {
-  border-color: #667eea;
-  background: #f8f9ff;
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+  background: var(--gold-glow);
 }
 
 .genre-chip.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-deep) 100%);
+  color: var(--text-inverse);
+  border-color: var(--gold-primary);
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
 }
 
 .chip-remove {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  margin-left: 0.2rem;
+  margin-left: 0.1rem;
+  opacity: 0.8;
 }
 
 .clear-genres-btn {
   align-self: flex-start;
-  padding: 0.4rem 0.8rem;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--accent-crimson);
+  border: 1px solid var(--accent-crimson);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all var(--transition-base);
 }
 
 .clear-genres-btn:hover {
-  background: #c82333;
+  background: var(--accent-crimson);
+  color: var(--text-primary);
 }
 
-.search-box {
-  flex: 1;
-  max-width: 400px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
+/* Filter Buttons */
 .filter-buttons {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
+/* ─── FILMS GRID ────────────────────────────────────────────────────────── */
 .films-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
+/* ─── FILM CARD ─────────────────────────────────────────────────────────── */
 .film-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid #e9ecef;
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Film strip decoration */
+.film-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--vault-border) 0%,
+    var(--vault-border) 10%,
+    var(--vault-black) 10%,
+    var(--vault-black) 15%,
+    var(--vault-border) 15%,
+    var(--vault-border) 25%,
+    var(--vault-black) 25%,
+    var(--vault-black) 30%,
+    var(--vault-border) 30%,
+    var(--vault-border) 40%,
+    var(--vault-black) 40%,
+    var(--vault-black) 45%,
+    var(--vault-border) 45%,
+    var(--vault-border) 55%,
+    var(--vault-black) 55%,
+    var(--vault-black) 60%,
+    var(--vault-border) 60%,
+    var(--vault-border) 70%,
+    var(--vault-black) 70%,
+    var(--vault-black) 75%,
+    var(--vault-border) 75%,
+    var(--vault-border) 85%,
+    var(--vault-black) 85%,
+    var(--vault-black) 90%,
+    var(--vault-border) 90%,
+    var(--vault-border) 100%
+  );
+  opacity: 0.5;
 }
 
 .film-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  border-color: var(--gold-primary);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px var(--gold-glow);
 }
 
 .film-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 1rem;
+  margin-bottom: var(--space-md);
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
 }
 
 .film-title {
-  color: #333;
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.3;
   flex: 1;
 }
 
+/* Availability Badge */
 .availability-badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .availability-badge.available {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: rgba(92, 184, 122, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(92, 184, 122, 0.3);
 }
 
 .availability-badge.unavailable {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background: rgba(196, 92, 92, 0.15);
+  color: var(--accent-crimson);
+  border: 1px solid rgba(196, 92, 92, 0.3);
 }
 
+/* Film Info */
 .film-info {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
 }
 
 .film-info p {
-  margin: 0.3rem 0;
+  margin: 0.35rem 0;
   font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .film-info strong {
-  color: #495057;
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
-/* Genre tags styling */
+/* Genre Tags */
 .genre-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin: 0.5rem 0;
+  margin: var(--space-sm) 0;
 }
 
 .genre-tag {
   display: inline-block;
   padding: 0.25rem 0.6rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-deep) 100%);
+  color: var(--text-inverse);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
+/* Film Description */
 .film-description {
-  margin-bottom: 1.5rem;
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+  color: var(--text-muted);
+  font-family: var(--font-elegant);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.6;
   flex: 1;
   min-height: 3rem;
   max-height: 4.5rem;
@@ -228,11 +331,15 @@
   -webkit-box-orient: vertical;
 }
 
+/* Film Actions */
 .film-actions {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
   justify-content: flex-start;
+  margin-top: auto;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--vault-border);
 }
 
 .film-actions .btn {
@@ -241,32 +348,42 @@
   text-align: center;
 }
 
+/* ─── EMPTY STATE ───────────────────────────────────────────────────────── */
 .no-films {
   text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: var(--space-3xl) var(--space-xl);
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
 }
 
 .no-films h3 {
-  color: #495057;
-  margin-bottom: 1rem;
+  font-family: var(--font-display);
   font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
 }
 
 .no-films p {
-  color: #666;
-  margin-bottom: 2rem;
+  font-family: var(--font-elegant);
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xl);
   font-size: 1.1rem;
 }
 
-/* Responsive Design */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .film-list-header {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
+  }
+  
+  .film-list-header h1::after {
+    left: 50%;
+    transform: translateX(-50%);
   }
   
   .film-list-controls {
@@ -289,7 +406,7 @@
   .film-card-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5rem;
+    gap: var(--space-sm);
   }
   
   .availability-badge {

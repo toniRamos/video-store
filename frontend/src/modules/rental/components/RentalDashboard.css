@@ -1,260 +1,293 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENTAL DASHBOARD · THE VAULT
+   Operations Overview
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .rental-dashboard {
-  padding: 20px;
+  padding: var(--space-lg);
   max-width: 1200px;
   margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* ─── DASHBOARD HEADER ──────────────────────────────────────────────────── */
 .dashboard-header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #e9ecef;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--vault-border);
+  position: relative;
+}
+
+.dashboard-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
 }
 
 .dashboard-header h1 {
   text-align: center;
-  margin-bottom: 20px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
 }
 
-/* Tab Navigation */
+/* ─── TAB NAVIGATION ────────────────────────────────────────────────────── */
 .tab-navigation {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
 }
 
 .tab-button {
-  padding: 12px 24px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  background: white;
-  color: #6c757d;
+  padding: 0.875rem 1.5rem;
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  background: var(--vault-card);
+  color: var(--text-secondary);
   cursor: pointer;
+  font-family: var(--font-display);
   font-weight: 600;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all var(--transition-base);
 }
 
 .tab-button:hover {
-  border-color: #007bff;
-  color: #007bff;
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+  box-shadow: var(--shadow-glow);
 }
 
 .tab-button.active {
-  background: #007bff;
-  border-color: #007bff;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-deep) 100%);
+  border-color: var(--gold-primary);
+  color: var(--text-inverse);
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
 }
 
-.dashboard-header h1 {
-  color: #2c3e50;
-  font-size: 2rem;
-  margin: 0;
-}
-
+/* ─── DASHBOARD ACTIONS ─────────────────────────────────────────────────── */
 .dashboard-actions {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .primary-button, .secondary-button {
-  padding: 10px 20px;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all var(--transition-base);
 }
 
 .primary-button {
-  background-color: #007bff;
-  color: white;
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-deep) 100%);
+  color: var(--text-inverse);
 }
 
 .primary-button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
 }
 
 .secondary-button {
-  background-color: #6c757d;
-  color: white;
+  background: var(--vault-muted);
+  color: var(--text-primary);
 }
 
 .secondary-button:hover {
-  background-color: #545b62;
+  background: var(--vault-border);
+  transform: translateY(-2px);
 }
 
 .primary-button.small, .secondary-button.small {
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
 }
 
 .text-button {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--gold-primary);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.9rem;
   text-decoration: underline;
+  font-family: var(--font-body);
+  transition: color var(--transition-base);
 }
 
 .text-button:hover {
-  color: #0056b3;
+  color: var(--gold-bright);
 }
 
-/* Loading y Error States */
+/* ─── LOADING & ERROR STATES ────────────────────────────────────────────── */
 .loading-container, .error-container {
   text-align: center;
-  padding: 60px 20px;
+  padding: var(--space-3xl);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
+  border: 3px solid var(--vault-border);
+  border-top: 3px solid var(--gold-primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  animation: vault-spin 1s linear infinite;
+  margin: 0 auto var(--space-lg);
 }
 
 .retry-button {
-  background-color: #28a745;
-  color: white;
+  background: var(--accent-emerald);
+  color: var(--text-inverse);
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  margin-top: 15px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin-top: var(--space-md);
+  transition: all var(--transition-base);
 }
 
 .retry-button:hover {
-  background-color: #218838;
+  background: #4da36a;
+  transform: translateY(-2px);
 }
 
-/* Metrics Grid */
+/* ─── METRICS GRID ──────────────────────────────────────────────────────── */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
 }
 
 .metric-card {
-  background: white;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  padding: 20px;
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  transition: all var(--transition-base);
 }
 
 .metric-card:hover {
   transform: translateY(-2px);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-glow);
 }
 
 .metric-card.active {
-  border-color: #28a745;
-  background-color: #f8fff8;
+  border-color: var(--accent-emerald);
+  background: rgba(92, 184, 122, 0.05);
 }
 
 .metric-card.overdue {
-  border-color: #dc3545;
-  background-color: #fff8f8;
+  border-color: var(--accent-crimson);
+  background: rgba(196, 92, 92, 0.05);
 }
 
 .metric-card.revenue {
-  border-color: #007bff;
-  background-color: #f8f9ff;
+  border-color: var(--accent-sapphire);
+  background: rgba(92, 141, 196, 0.05);
 }
 
 .metric-card h3 {
-  color: #6c757d;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 0 10px 0;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .metric-value {
+  font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: bold;
-  color: #2c3e50;
+  font-weight: 800;
+  color: var(--text-primary);
   margin: 0;
 }
 
-/* Dashboard Content */
+/* ─── DASHBOARD CONTENT ─────────────────────────────────────────────────── */
 .dashboard-content {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: var(--space-xl);
 }
 
 .dashboard-section {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
 }
 
 .overdue-section {
-  border-left: 4px solid #dc3545;
-  background-color: #fff8f8;
+  border-left: 3px solid var(--accent-crimson);
+  background: rgba(196, 92, 92, 0.03);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e9ecef;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--vault-border);
 }
 
 .section-header h2 {
-  color: #2c3e50;
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
   margin: 0;
 }
 
-/* Rentals List */
+/* ─── RENTALS LIST ──────────────────────────────────────────────────────── */
 .rentals-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: var(--space-md);
 }
 
 .rental-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  background: #f8f9fa;
-  transition: all 0.2s ease;
+  padding: var(--space-md);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  background: var(--vault-surface);
+  transition: all var(--transition-base);
 }
 
 .rental-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-color: #007bff;
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-glow);
 }
 
 .overdue-card {
-  border-left: 4px solid #dc3545;
-  background-color: #fff5f5;
+  border-left: 3px solid var(--accent-crimson);
+  background: rgba(196, 92, 92, 0.05);
 }
 
 .rental-info {
@@ -262,73 +295,86 @@
 }
 
 .rental-info h4 {
-  margin: 0 0 8px 0;
-  color: #2c3e50;
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .rental-info p {
-  margin: 4px 0;
-  color: #6c757d;
-  font-size: 14px;
+  margin: 0.25rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .rental-status {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .rental-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
-/* Status Badges */
+/* ─── STATUS BADGES ─────────────────────────────────────────────────────── */
 .status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .status-active {
-  background-color: #d4edda;
-  color: #155724;
+  background: rgba(92, 184, 122, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(92, 184, 122, 0.3);
 }
 
 .status-overdue {
-  background-color: #f8d7da;
-  color: #721c24;
+  background: rgba(196, 92, 92, 0.15);
+  color: var(--accent-crimson);
+  border: 1px solid rgba(196, 92, 92, 0.3);
 }
 
 .status-returned {
-  background-color: #d1ecf1;
-  color: #0c5460;
+  background: rgba(92, 141, 196, 0.15);
+  color: var(--accent-sapphire);
+  border: 1px solid rgba(92, 141, 196, 0.3);
 }
 
-/* Top Items List */
+/* ─── TOP ITEMS LIST ────────────────────────────────────────────────────── */
 .top-items-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .top-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  background: white;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  background: var(--vault-surface);
+  transition: all var(--transition-base);
+}
+
+.top-item:hover {
+  border-color: var(--gold-primary);
 }
 
 .rank {
-  font-size: 18px;
-  font-weight: bold;
-  color: #007bff;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--gold-primary);
   min-width: 30px;
 }
 
@@ -337,31 +383,34 @@
 }
 
 .item-info h4 {
-  margin: 0 0 4px 0;
-  color: #2c3e50;
-  font-size: 14px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
 }
 
 .item-info p {
   margin: 0;
-  color: #6c757d;
-  font-size: 12px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
 .item-revenue {
-  font-weight: bold;
-  color: #28a745;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent-emerald);
 }
 
-/* Responsive Design */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .rental-dashboard {
-    padding: 15px;
+    padding: var(--space-md);
   }
   
   .dashboard-header {
     flex-direction: column;
-    gap: 15px;
+    gap: var(--space-md);
     align-items: stretch;
   }
   
@@ -371,13 +420,13 @@
   
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: var(--space-md);
   }
   
   .rental-card {
     flex-direction: column;
     align-items: stretch;
-    gap: 15px;
+    gap: var(--space-md);
   }
   
   .rental-status {
@@ -386,7 +435,7 @@
   
   .section-header {
     flex-direction: column;
-    gap: 10px;
+    gap: var(--space-sm);
     align-items: stretch;
   }
 }

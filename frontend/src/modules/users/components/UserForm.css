@@ -1,197 +1,276 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   USER FORM · THE VAULT
+   Member Registration & Edit Interface
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .user-form-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--space-lg);
+  animation: slideUp 0.4s ease-out;
 }
 
+/* ─── HEADER ────────────────────────────────────────────────────────────── */
 .user-form-header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--vault-border);
+  position: relative;
+}
+
+.user-form-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
 }
 
 .user-form-header h2 {
-  color: #333;
+  font-family: var(--font-display);
   font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
   margin: 0;
   text-align: center;
 }
 
+/* ─── ERROR MESSAGE ─────────────────────────────────────────────────────── */
 .error-message {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(196, 92, 92, 0.1) 0%, rgba(196, 92, 92, 0.05) 100%);
+  border: 1px solid var(--accent-crimson);
+  border-left: 3px solid var(--accent-crimson);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
   text-align: center;
 }
 
 .error-message p {
-  color: #c33;
+  color: #f5c5c5;
   margin: 0;
 }
 
+/* ─── FORM CARD ─────────────────────────────────────────────────────────── */
 .user-form {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  position: relative;
 }
 
+/* Art Deco corner accents */
+.user-form::before,
+.user-form::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--vault-border);
+}
+
+.user-form::before {
+  top: 12px;
+  left: 12px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.user-form::after {
+  bottom: 12px;
+  right: 12px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ─── FORM SECTIONS ─────────────────────────────────────────────────────── */
 .form-section {
-  margin-bottom: 30px;
+  margin-bottom: var(--space-xl);
 }
 
 .form-section h3 {
-  color: #333;
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--vault-border);
 }
 
+/* ─── FORM ROWS ─────────────────────────────────────────────────────────── */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .form-row:last-child {
   margin-bottom: 0;
 }
 
+/* Three column layout */
+.form-row:has(.form-group:nth-child(3)) {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ─── FORM GROUPS ───────────────────────────────────────────────────────── */
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
 .form-group label {
+  font-family: var(--font-display);
   font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group select {
-  padding: 12px 16px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.checkbox-label {
-  cursor: pointer;
-  font-weight: 500 !important;
-  margin: 0 !important;
-  color: #555;
-}
-
-/* Special styling for single column fields */
-.form-section .form-group:not(.form-row .form-group) {
-  margin-bottom: 20px;
-}
-
-/* Three column layout for city, postal code, country */
-.form-row:has(.form-group:nth-child(3)) {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.form-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-}
-
-/* Button styles */
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
-  text-align: center;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #45a049;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268;
-  transform: translateY(-1px);
-}
-
-/* Form validation styling */
-.form-group input:invalid {
-  border-color: #f44336;
-}
-
-.form-group input:valid {
-  border-color: #4CAF50;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
 }
 
 /* Required field indicator */
 .form-group label:has(+ input[required])::after,
 .form-group label:has(+ select[required])::after {
   content: " *";
-  color: #f44336;
+  color: var(--accent-crimson);
 }
 
-/* Responsive design */
+/* ─── INPUTS ────────────────────────────────────────────────────────────── */
+.form-group input,
+.form-group select {
+  padding: 0.875rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: var(--vault-card);
+  color: var(--text-primary);
+}
+
+/* Validation states */
+.form-group input:invalid:not(:placeholder-shown) {
+  border-color: var(--accent-crimson);
+}
+
+.form-group input:valid:not(:placeholder-shown) {
+  border-color: var(--accent-emerald);
+}
+
+/* ─── CHECKBOX GROUP ────────────────────────────────────────────────────── */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.checkbox-group input[type="checkbox"] {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  background: var(--vault-surface);
+  border: 2px solid var(--vault-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background: var(--gold-primary);
+  border-color: var(--gold-primary);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-inverse);
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.checkbox-group input[type="checkbox"]:focus {
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.checkbox-label {
+  cursor: pointer;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Single column fields */
+.form-section .form-group:not(.form-row .form-group) {
+  margin-bottom: var(--space-lg);
+}
+
+/* ─── FORM ACTIONS ──────────────────────────────────────────────────────── */
+.form-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--vault-border);
+}
+
+/* ─── BUTTON LOADING STATE ──────────────────────────────────────────────── */
+.btn:disabled {
+  position: relative;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .user-form-container {
-    padding: 10px;
+    padding: var(--space-sm);
   }
 
   .user-form {
-    padding: 20px;
+    padding: var(--space-lg);
+  }
+
+  .user-form::before,
+  .user-form::after {
+    display: none;
   }
 
   .user-form-header h2 {
@@ -200,7 +279,7 @@
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: var(--space-md);
   }
 
   .form-row:has(.form-group:nth-child(3)) {
@@ -211,57 +290,31 @@
     flex-direction: column;
   }
 
-  .btn {
+  .form-actions .btn {
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .user-form-container {
-    padding: 5px;
+    padding: var(--space-xs);
   }
 
   .user-form {
-    padding: 15px;
+    padding: var(--space-md);
   }
 
   .form-section {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-lg);
   }
 
   .form-section h3 {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 
   .form-group input,
   .form-group select {
-    font-size: 14px;
-    padding: 10px 12px;
+    font-size: 0.95rem;
+    padding: 0.75rem;
   }
-}
-
-/* Loading state */
-.btn:disabled {
-  position: relative;
-}
-
-.btn:disabled::after {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  margin: auto;
-  border: 2px solid transparent;
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }

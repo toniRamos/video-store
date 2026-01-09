@@ -1,3 +1,8 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENTAL INVENTORY TABLE · THE VAULT
+   Stock Overview Grid
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .inventory-table-container {
   overflow-x: auto;
 }
@@ -8,13 +13,18 @@
   font-size: 0.95rem;
 }
 
+/* ─── TABLE HEADER ──────────────────────────────────────────────────────── */
 .inventory-table th {
-  background-color: #f7fafc;
-  color: #4a5568;
+  background: var(--vault-surface);
+  color: var(--text-muted);
+  font-family: var(--font-display);
   font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   padding: 1rem 1.25rem;
   text-align: left;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--vault-border);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -24,34 +34,36 @@
   min-width: 300px;
 }
 
+/* ─── TABLE ROWS ────────────────────────────────────────────────────────── */
 .inventory-row {
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-base);
+  border-bottom: 1px solid var(--vault-border);
 }
 
 .inventory-row:hover {
-  background-color: #f7fafc;
+  background: var(--vault-surface);
 }
 
 .inventory-row.unavailable {
-  opacity: 0.7;
-  background-color: #fed7d7;
+  opacity: 0.6;
+  background: rgba(196, 92, 92, 0.05);
 }
 
 .inventory-row.out-of-stock {
-  background-color: #fef5e7;
+  background: rgba(196, 153, 92, 0.05);
 }
 
 .inventory-row.low-stock {
-  background-color: #fefcbf;
+  background: rgba(196, 153, 92, 0.03);
 }
 
 .inventory-table td {
-  padding: 1.25rem 1.25rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--vault-border);
   vertical-align: middle;
 }
 
-/* Film Details */
+/* ─── FILM DETAILS ──────────────────────────────────────────────────────── */
 .film-details {
   min-width: 300px;
 }
@@ -63,17 +75,20 @@
 }
 
 .film-title {
+  font-family: var(--font-display);
   font-weight: 600;
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
 .film-meta {
-  color: #718096;
+  font-family: var(--font-elegant);
+  font-style: italic;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
-/* Status */
+/* ─── STATUS CELL ───────────────────────────────────────────────────────── */
 .status-cell {
   min-width: 140px;
 }
@@ -83,32 +98,39 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .status-badge.in-stock {
-  background-color: #c6f6d5;
-  color: #22543d;
+  background: rgba(92, 184, 122, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(92, 184, 122, 0.3);
 }
 
 .status-badge.low-stock {
-  background-color: #faf089;
-  color: #744210;
+  background: rgba(196, 153, 92, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid rgba(196, 153, 92, 0.3);
 }
 
 .status-badge.out-of-stock {
-  background-color: #fed7d7;
-  color: #742a2a;
+  background: rgba(196, 92, 92, 0.15);
+  color: var(--accent-crimson);
+  border: 1px solid rgba(196, 92, 92, 0.3);
 }
 
 .status-badge.unavailable {
-  background-color: #e2e8f0;
-  color: #4a5568;
+  background: var(--vault-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--vault-border);
 }
 
-/* Quantity Displays */
+/* ─── QUANTITY DISPLAYS ─────────────────────────────────────────────────── */
 .quantity-cell,
 .availability-cell,
 .rented-cell {
@@ -128,32 +150,35 @@
 .quantity-number,
 .availability-number,
 .rented-number {
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
 }
 
 .quantity-number {
-  color: #4299e1;
+  color: var(--accent-sapphire);
 }
 
 .availability-number {
-  color: #48bb78;
+  color: var(--accent-emerald);
 }
 
 .rented-number {
-  color: #ed8936;
+  color: var(--accent-amber);
 }
 
 .quantity-label,
 .availability-label,
 .rented-label {
-  font-size: 0.75rem;
-  color: #718096;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-/* Actions */
+/* ─── ACTIONS CELL ──────────────────────────────────────────────────────── */
 .actions-cell {
   min-width: 120px;
   text-align: center;
@@ -164,18 +189,21 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #4299e1;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
 }
 
 .edit-button:hover {
-  background-color: #3182ce;
+  background: var(--gold-glow);
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
   transform: translateY(-1px);
 }
 
@@ -185,47 +213,52 @@
 
 .edit-button.disabled,
 .edit-button:disabled {
-  background-color: #e2e8f0;
-  color: #a0aec0;
+  background: var(--vault-surface);
+  color: var(--text-muted);
+  border-color: var(--vault-border);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .edit-button.disabled:hover,
 .edit-button:disabled:hover {
-  background-color: #e2e8f0;
+  background: var(--vault-surface);
   transform: none;
 }
 
-/* Empty State */
+/* ─── EMPTY STATE ───────────────────────────────────────────────────────── */
 .empty-inventory {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  color: #718096;
+  padding: var(--space-3xl);
+  color: var(--text-muted);
   text-align: center;
 }
 
 .empty-icon {
   font-size: 4rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
   opacity: 0.5;
 }
 
 .empty-inventory h3 {
-  margin: 0 0 0.5rem 0;
-  color: #4a5568;
+  font-family: var(--font-display);
   font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .empty-inventory p {
+  font-family: var(--font-elegant);
+  font-style: italic;
   margin: 0;
   font-size: 1rem;
 }
 
-/* Responsive Design */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .inventory-table th,
   .inventory-table td {
@@ -262,7 +295,7 @@
   }
   
   .status-badge {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     padding: 0.375rem 0.5rem;
   }
 }
@@ -279,6 +312,6 @@
   
   .edit-button {
     padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 }

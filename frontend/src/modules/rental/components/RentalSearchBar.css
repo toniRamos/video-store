@@ -1,6 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENTAL SEARCH BAR · THE VAULT
+   Inventory Search Controls
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .rental-search-bar {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--space-lg);
   align-items: center;
   flex-wrap: wrap;
 }
@@ -13,23 +18,25 @@
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 2.5rem 0.75rem 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
   font-size: 1rem;
-  transition: all 0.2s;
-  background-color: #f7fafc;
+  transition: all var(--transition-base);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #4299e1;
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-}
-
-.search-input::placeholder {
-  color: #a0aec0;
+  border-color: var(--gold-primary);
+  background: var(--vault-card);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .search-icon {
@@ -37,8 +44,9 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #a0aec0;
+  color: var(--text-muted);
   font-size: 1rem;
+  pointer-events: none;
 }
 
 .filter-container {
@@ -48,39 +56,46 @@
 }
 
 .filter-label {
+  font-family: var(--font-display);
   font-weight: 500;
-  color: #4a5568;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .filter-select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: white;
+  padding: 0.875rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
   font-size: 0.95rem;
-  color: #4a5568;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
   min-width: 180px;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .filter-select:hover {
-  border-color: #cbd5e0;
+  border-color: var(--text-muted);
 }
 
-/* Responsive Design */
+.filter-select option {
+  background: var(--vault-card);
+  color: var(--text-primary);
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .rental-search-bar {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .search-input-container {
@@ -101,7 +116,7 @@
   .filter-container {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5rem;
+    gap: var(--space-sm);
   }
 
   .filter-label {

@@ -1,278 +1,306 @@
-/* Return Modal Specific Styles */
+/* ═══════════════════════════════════════════════════════════════════════════
+   RETURN MODAL · THE VAULT
+   Film Return Processing
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .return-modal {
   max-width: 700px;
 }
 
 .return-form-container {
-  padding: 24px;
+  padding: var(--space-xl);
 }
 
-/* Rental Information Section */
+/* ─── RENTAL INFO SECTION ───────────────────────────────────────────────── */
 .rental-info-section {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .rental-info-section h3 {
-  margin: 0 0 16px 0;
-  color: #2c3e50;
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
   font-weight: 600;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 8px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  margin: 0 0 var(--space-md) 0;
+  border-bottom: 1px solid var(--vault-border);
+  padding-bottom: var(--space-sm);
 }
 
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space-md);
 }
 
 .info-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: var(--space-sm) 0;
 }
 
 .info-item label {
+  font-family: var(--font-display);
   font-weight: 500;
-  color: #6c757d;
-  font-size: 14px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
 }
 
 .info-item span {
   font-weight: 500;
-  color: #2c3e50;
-  font-size: 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
   text-align: right;
 }
 
 .overdue-date {
-  color: #dc3545 !important;
+  color: var(--accent-crimson) !important;
   font-weight: 600 !important;
 }
 
-/* Status Badge in Return Modal */
+/* Status Badges */
 .return-modal .status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .return-modal .status-active {
-  background-color: #d4edda;
-  color: #155724;
+  background: rgba(92, 184, 122, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(92, 184, 122, 0.3);
 }
 
 .return-modal .status-overdue {
-  background-color: #f8d7da;
-  color: #721c24;
+  background: rgba(196, 92, 92, 0.15);
+  color: var(--accent-crimson);
+  border: 1px solid rgba(196, 92, 92, 0.3);
 }
 
 .return-modal .status-returned {
-  background-color: #d1ecf1;
-  color: #0c5460;
+  background: rgba(92, 141, 196, 0.15);
+  color: var(--accent-sapphire);
+  border: 1px solid rgba(92, 141, 196, 0.3);
 }
 
-/* Return Form */
+/* ─── RETURN FORM ───────────────────────────────────────────────────────── */
 .return-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-xl);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .form-group label {
+  font-family: var(--font-display);
   font-weight: 500;
-  color: #2c3e50;
-  font-size: 14px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
 }
 
 .date-input {
-  padding: 12px 16px;
-  border: 2px solid #e9ecef;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
+  padding: 0.875rem 1rem;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
   max-width: 200px;
 }
 
 .date-input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
-/* Calculation Summary */
+/* ─── CALCULATION SUMMARY ───────────────────────────────────────────────── */
 .calculation-summary {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 20px;
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
 }
 
 .calculation-summary h4 {
-  margin: 0 0 16px 0;
-  color: #2c3e50;
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
   font-weight: 600;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 8px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-md) 0;
+  border-bottom: 1px solid var(--vault-border);
+  padding-bottom: var(--space-sm);
 }
 
 .summary-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-md);
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  background: white;
-  border-radius: 4px;
-  border: 1px solid #e9ecef;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--vault-card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--vault-border);
 }
 
 .summary-item label {
-  color: #6c757d;
-  font-size: 14px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .summary-item span {
-  color: #2c3e50;
-  font-size: 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
 .summary-item.overdue {
-  background-color: #fff5f5;
-  border-color: #f8d7da;
+  background: rgba(196, 92, 92, 0.1);
+  border-color: rgba(196, 92, 92, 0.3);
 }
 
 .summary-item.overdue label,
 .summary-item.overdue span {
-  color: #721c24;
+  color: var(--accent-crimson);
 }
 
 .summary-item.total {
-  background-color: #e3f2fd;
-  border-color: #bbdefb;
-  margin-top: 8px;
-  font-size: 16px;
+  background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 100%);
+  border-color: var(--gold-primary);
+  margin-top: var(--space-sm);
 }
 
 .summary-item.total label,
 .summary-item.total span {
-  color: #1565c0;
-  font-size: 16px;
+  color: var(--gold-primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 600;
 }
 
-/* Warning and Success Messages */
+/* ─── WARNING & SUCCESS MESSAGES ────────────────────────────────────────── */
 .overdue-warning {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
-  color: #856404;
-  padding: 12px;
-  border-radius: 6px;
-  margin-top: 16px;
-  font-size: 14px;
+  background: rgba(196, 153, 92, 0.1);
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-md);
+  font-size: 0.9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .on-time-message {
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
-  padding: 12px;
-  border-radius: 6px;
-  margin-top: 16px;
-  font-size: 14px;
+  background: rgba(92, 184, 122, 0.1);
+  border: 1px solid var(--accent-emerald);
+  color: var(--accent-emerald);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-md);
+  font-size: 0.9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
-/* Return Modal Actions */
+/* ─── MODAL ACTIONS ─────────────────────────────────────────────────────── */
 .return-modal .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #e9ecef;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--vault-border);
 }
 
 .return-modal .cancel-button {
-  background-color: #6c757d;
-  color: white;
+  background: var(--vault-muted);
+  color: var(--text-primary);
   border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition-base);
 }
 
 .return-modal .cancel-button:hover:not(:disabled) {
-  background-color: #545b62;
+  background: var(--vault-border);
 }
 
 .return-modal .submit-button {
   border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition-base);
 }
 
 .normal-return {
-  background-color: #28a745;
-  color: white;
+  background: var(--accent-emerald);
+  color: var(--text-inverse);
 }
 
 .normal-return:hover:not(:disabled) {
-  background-color: #218838;
+  background: #4da36a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(92, 184, 122, 0.3);
 }
 
 .overdue-return {
-  background-color: #dc3545;
-  color: white;
+  background: var(--accent-crimson);
+  color: var(--text-primary);
 }
 
 .overdue-return:hover:not(:disabled) {
-  background-color: #c82333;
+  background: #b04a4a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(196, 92, 92, 0.3);
 }
 
 .return-modal .submit-button:disabled,
 .return-modal .cancel-button:disabled {
-  background-color: #e9ecef;
-  color: #6c757d;
+  background: var(--vault-muted);
+  color: var(--text-muted);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Responsive Design for Return Modal */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .return-modal {
     max-width: 100%;
@@ -280,33 +308,33 @@
   }
 
   .return-form-container {
-    padding: 20px;
+    padding: var(--space-lg);
   }
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .info-item {
     flex-direction: column;
     align-items: stretch;
     text-align: left;
-    padding: 12px;
-    background-color: white;
-    border-radius: 4px;
-    border: 1px solid #e9ecef;
+    padding: var(--space-md);
+    background: var(--vault-card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--vault-border);
   }
 
   .info-item span {
     text-align: left;
-    margin-top: 4px;
+    margin-top: 0.25rem;
     font-weight: 600;
   }
 
   .return-modal .modal-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: var(--space-sm);
   }
 
   .return-modal .cancel-button,
@@ -321,23 +349,14 @@
 
 @media (max-width: 480px) {
   .rental-info-section {
-    padding: 16px;
+    padding: var(--space-md);
   }
 
   .calculation-summary {
-    padding: 16px;
+    padding: var(--space-md);
   }
 
   .summary-item {
-    padding: 12px;
-  }
-
-  .summary-item.total {
-    font-size: 14px;
-  }
-
-  .summary-item.total label,
-  .summary-item.total span {
-    font-size: 14px;
+    padding: var(--space-md);
   }
 }

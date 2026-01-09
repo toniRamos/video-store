@@ -1,13 +1,19 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIVE DUPLICATE WARNING · THE VAULT
+   Real-time Duplicate Detection Alert
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .live-duplicate-warning {
-  background-color: #fef3c7;
-  border: 1px solid #f59e0b;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  animation: slideDown 0.3s ease-out;
+  background: rgba(196, 153, 92, 0.1);
+  border: 1px solid var(--accent-amber);
+  border-left: 3px solid var(--accent-amber);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+  animation: warningSlideDown 0.3s ease-out;
 }
 
-@keyframes slideDown {
+@keyframes warningSlideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -21,28 +27,31 @@
 .live-warning-content {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .warning-icon {
   font-size: 1.1rem;
   margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .warning-text {
-  color: #92400e;
+  color: var(--accent-amber);
+  font-family: var(--font-body);
   font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .warning-text strong {
   font-weight: 600;
+  color: var(--gold-bright);
 }
 
-/* Responsive */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .live-duplicate-warning {
-    padding: 10px 12px;
+    padding: var(--space-sm) var(--space-md);
   }
   
   .warning-text {

@@ -1,41 +1,69 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   USER NAVIGATION · THE VAULT
+   Members Section Navigation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .user-navigation {
-  margin-bottom: 32px;
+  margin-bottom: var(--space-xl);
 }
 
-/* Header Section */
+/* ─── HEADER SECTION ────────────────────────────────────────────────────── */
 .user-nav-header {
   text-align: center;
-  margin-bottom: 24px;
-  padding: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  color: white;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  margin-bottom: var(--space-xl);
+  padding: var(--space-xl);
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative top accent */
+.user-nav-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--gold-primary) 0%, 
+    var(--gold-bright) 50%, 
+    var(--gold-primary) 100%
+  );
 }
 
 .user-nav-title {
-  margin: 0 0 8px 0;
-  font-size: 28px;
+  margin: 0 0 var(--space-sm) 0;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-md);
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .user-nav-subtitle {
   margin: 0;
-  font-size: 16px;
-  opacity: 0.9;
-  font-weight: 400;
+  font-family: var(--font-elegant);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-muted);
 }
 
-/* Navigation Menu */
+/* ─── NAVIGATION MENU ───────────────────────────────────────────────────── */
 .user-nav-menu {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 24px;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
 }
 
 .user-nav-link {
@@ -43,19 +71,19 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 24px 20px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--vault-card);
+  border: 1px solid var(--vault-border);
+  border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition: all var(--transition-base);
 }
 
+/* Hover gradient overlay */
 .user-nav-link::before {
   content: '';
   position: absolute;
@@ -63,8 +91,8 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+  transition: left 0.6s ease;
 }
 
 .user-nav-link:hover::before {
@@ -73,117 +101,124 @@
 
 .user-nav-link:hover {
   transform: translateY(-4px);
-  border-color: #667eea;
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+  border-color: var(--gold-primary);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    var(--shadow-glow);
 }
 
 .user-nav-link.active {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+  border-color: var(--gold-primary);
+  background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+  box-shadow: var(--shadow-glow);
 }
 
+/* ─── NAV ELEMENTS ──────────────────────────────────────────────────────── */
 .nav-icon {
-  font-size: 32px;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
   display: block;
+  transition: transform var(--transition-base);
 }
 
 .nav-text {
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 8px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
   display: block;
+  transition: color var(--transition-base);
 }
 
 .nav-description {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.4;
+  font-family: var(--font-elegant);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.5;
   display: block;
 }
 
 .user-nav-link.active .nav-text {
-  color: #667eea;
+  color: var(--gold-primary);
 }
 
 .user-nav-link.active .nav-description {
-  color: #4c566a;
+  color: var(--text-secondary);
 }
 
 /* Hover Effects */
 .user-nav-link:hover .nav-icon {
   transform: scale(1.1);
-  transition: transform 0.3s ease;
 }
 
 .user-nav-link:hover .nav-text {
-  color: #667eea;
+  color: var(--gold-primary);
 }
 
 .user-nav-link:hover .nav-description {
-  color: #4c566a;
+  color: var(--text-secondary);
 }
 
-/* Responsive Design */
+/* ─── RESPONSIVE ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .user-nav-menu {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--space-md);
   }
   
   .user-nav-header {
-    padding: 20px 16px;
+    padding: var(--space-lg) var(--space-md);
   }
   
   .user-nav-title {
-    font-size: 24px;
+    font-size: 1.5rem;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-sm);
   }
   
   .user-nav-subtitle {
-    font-size: 14px;
+    font-size: 0.9rem;
   }
   
   .user-nav-link {
-    padding: 20px 16px;
+    padding: var(--space-lg) var(--space-md);
   }
   
   .nav-icon {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
   
   .nav-text {
-    font-size: 16px;
+    font-size: 1rem;
   }
   
   .nav-description {
-    font-size: 13px;
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
   .user-navigation {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-lg);
   }
   
   .user-nav-header {
-    padding: 16px 12px;
-    margin-bottom: 20px;
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
   }
   
   .user-nav-title {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
   
   .user-nav-menu {
-    gap: 12px;
+    gap: var(--space-sm);
   }
   
   .user-nav-link {
-    padding: 16px 12px;
+    padding: var(--space-md);
   }
 }
