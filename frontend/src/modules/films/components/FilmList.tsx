@@ -10,10 +10,11 @@ const FilmList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'available' | 'unavailable'>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   useEffect(() => {
     loadFilms();
-  }, [filter]);
+  }, [filter, selectedGenres]);
 
   const loadFilms = async () => {
     try {
@@ -21,13 +22,24 @@ const FilmList: React.FC = () => {
       setError(null);
       
       let filmsData: Film[];
-      if (filter === 'available') {
+      
+      // If genres are selected, search by genres first
+      if (selectedGenres.length > 0) {
+        filmsData = await filmService.getFilmsByGenre(selectedGenres);
+      } else if (filter === 'available') {
         filmsData = await filmService.getAvailableFilms();
       } else {
         filmsData = await filmService.getAllFilms();
         if (filter === 'unavailable') {
           filmsData = filmsData.filter(film => !film.available);
         }
+      }
+      
+      // Apply availability filter even when searching by genre
+      if (selectedGenres.length > 0 && filter === 'available') {
+        filmsData = filmsData.filter(film => film.available);
+      } else if (selectedGenres.length > 0 && filter === 'unavailable') {
+        filmsData = filmsData.filter(film => !film.available);
       }
       
       setFilms(filmsData);
@@ -87,6 +99,36 @@ const FilmList: React.FC = () => {
       )}
 
       <div className="film-list-controls">
+        <div className="genre-filter-section">
+          <label className="genre-filter-label">Filter by Genre:</label>
+          <div className="genre-filter-chips">
+            {['Action', 'Adventure', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'Documentary', 'Animation', 'Family', 'Musical', 'Western', 'War', 'Biography', 'History', 'Sport'].map((genre) => (
+              <button
+                key={genre}
+                className={`genre-chip ${selectedGenres.includes(genre) ? 'active' : ''}`}
+                onClick={() => {
+                  if (selectedGenres.includes(genre)) {
+                    setSelectedGenres(selectedGenres.filter(g => g !== genre));
+                  } else {
+                    setSelectedGenres([...selectedGenres, genre]);
+                  }
+                }}
+              >
+                {genre}
+                {selectedGenres.includes(genre) && <span className="chip-remove">×</span>}
+              </button>
+            ))}
+          </div>
+          {selectedGenres.length > 0 && (
+            <button 
+              className="clear-genres-btn"
+              onClick={() => setSelectedGenres([])}
+            >
+              Clear all genres ({selectedGenres.length})
+            </button>
+          )}
+        </div>
+
         <div className="search-box">
           <input
             type="text"
